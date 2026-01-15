@@ -1,0 +1,134 @@
+.payqr-page {
+  padding: 30px;
+  background: #f6f8fb;
+  min-height: 100vh;
+}
+
+.payqr-layout {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+}
+
+/* LEFT */
+.plan-left {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.section-title {
+  margin-bottom: 14px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* RIGHT */
+.payqr-right {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+/* Plan card */
+.plan-status-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 14px;
+}
+
+.plan-status-card.expired {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #b91c1c;
+}
+
+.success-text {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.danger-text {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Tabs */
+.tab-switch {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tab-switch button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #f1f1f1;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab-switch button.active {
+  background: #111827;
+  color: #fff;
+}
+
+/* QR */
+.qr-box {
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 14px;
+  margin: 16px 0;
+  border: 1px dashed #d0d7e2;
+}
+
+.price-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.save-text {
+  color: #16a34a;
+  font-size: 14px;
+}
+
+.note-text {
+  display: block;
+  margin: 10px 0;
+  color: #666;
+}
+
+/* Button */
+.payqr-confirm-btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.payqr-confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .payqr-layout {
+    grid-template-columns: 1fr;
+  }
+}

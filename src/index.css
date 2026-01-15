@@ -1,0 +1,13 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.qr-container {
+  min-height: 100vh;
+}

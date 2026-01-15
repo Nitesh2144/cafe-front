@@ -1,0 +1,189 @@
+/* 🌤 LIGHT MODE ONLY */
+
+body {
+  background: #f7f7f7;
+  color: #111;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+/* 📱 CONTAINER */
+.qr-container {
+  max-width: 480px;
+  margin: auto;
+  padding: 14px;
+    padding-bottom: 90px;
+}
+
+
+/* 🧭 CATEGORY BAR */
+.category-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 0 14px;
+}
+
+.category-bar button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.category-bar button.active {
+  background: #000;
+  color: #fff;
+}
+
+/* 🍽 GRID */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 10px;
+}
+
+/* 🧾 CARD */
+.menu-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* 📝 INFO */
+.menu-info {
+  padding: 10px 12px;
+}
+
+.menu-info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.menu-info p {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ➕ ADD BUTTON */
+.add-btn {
+  margin: 10px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 14px;
+  border: none;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ⏳ LOADING */
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+}
+/* ================= QTY BOX ================= */
+.qty-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f3f4f6;
+  
+  border-radius: 20px;
+  padding: 4px 8px;
+  width: 90%;
+  margin-top: 6px;
+}
+.order-status {
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.pending { background: #fde68a; }
+.approved { background: #bbf7d0; }
+.rejected { background: #fecaca; }
+.completed { background: #bfdbfe; }
+
+/* ➖ ➕ BUTTONS */
+.qty-box button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* BUTTON HOVER */
+.qty-box button:hover {
+  background: #000000;
+}
+
+/* QTY NUMBER */
+.qty-box span {
+  min-width: 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* OPTIONAL – MOBILE TAP FEEL */
+.qty-box button:active {
+  transform: scale(0.95);
+}
+/* ================= CART FOOTER ================= */
+.cart-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-top: 1px solid #e5e5e5;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.08);
+  z-index: 999;
+}
+
+/* ================= PLACE ORDER BUTTON ================= */
+.place-order-btn {
+  background: #5c6a99;
+  color: #fff;
+  border: none;
+  margin-right: 40px;
+  padding: 15px 18px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.place-order-btn:active {
+  transform: scale(0.96);
+}

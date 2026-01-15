@@ -1,0 +1,161 @@
+.units-page {
+  padding: 20px;
+}
+.units-page h2{
+  padding-bottom: 30px;
+  font-size: 30px;
+}
+.unit-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.unit-form input {
+  padding: 8px;
+}
+
+.unit-form button {
+  padding: 8px 14px;
+  background: #1e3c69;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.unit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.unit-table th,
+.unit-table td {
+  border: 1px solid #ddd;
+  padding: 17px;
+   font-size: 17px;
+  text-align: center;
+}
+
+.unit-table th {
+  background: #f4f4f4;
+}
+
+.unit-table button {
+  margin-left: 10px;
+  margin-right: 5px;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
+.unit-table .danger {
+  background: #dc3545;
+  color: white;
+  border: none;
+}
+.tabledata td{
+  text-align: center;
+}
+.btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn.edit { background: #0d6efd; color: #fff; }
+.btn.view { background: #198754; color: #fff; }
+.btn.print { background: #6f42c1; color: #fff; height: 40px;}
+.btn.generate { background: #20c997; color: #fff; }
+.btn.danger { background: #dc3545; color: #fff; }
+
+.btn:hover {
+  opacity: 0.9;
+}
+.qr-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.qr-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  position: relative;
+  text-align: center;
+}
+
+.qr-content img {
+  width: 300px;
+  height: 300px;
+}
+
+.qr-unit-code {
+  padding-bottom: 20px;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.qr-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+/* ===== A4 MULTI QR PRINT ===== */
+
+.a4-print {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .a4-print,
+  .a4-print * {
+    visibility: visible;
+  }
+
+  .a4-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm;
+    height: 297mm;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 QR per row */
+    gap: 20mm;
+    padding: 15mm;
+  }
+
+  .qr-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    page-break-inside: avoid;
+  }
+
+  .qr-item img {
+    width: 120mm;
+    height: 120mm;
+  }
+
+  .qr-code-text {
+    margin-top: 6mm;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+}

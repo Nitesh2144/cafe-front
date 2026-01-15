@@ -1,0 +1,174 @@
+.admin-orders {
+  padding: 16px;
+}
+
+.admin-orders h2 {
+  margin-bottom: 14px;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  color: #666;
+}
+
+/* 🔳 Order Card */
+.order-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.order-card.new {
+  animation: pulse 2s ease;
+  border-left: 5px solid #6c5ce7;
+}
+
+/* 🔝 Header */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* 🟢 Status */
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.status.PENDING {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.PREPARING {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status.SERVED {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.CANCELLED {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* 📦 Items */
+.order-items {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+  margin-bottom: 8px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+/* 🔽 Footer */
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.time {
+  font-size: 12px;
+  color: #666;
+}
+.admin-orders {
+  padding: 20px;
+}
+.order-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0 25px;
+}
+.order-time {
+  color: #d35400;
+  font-weight: 600;
+}
+
+.order-tabs button {
+  height: 40px;                 
+  padding: 0 14px;              
+  border-radius: 20px;
+  border: none;
+  background: #e5e7eb;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;        
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+
+.order-tabs button.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.order-tabs .count {
+  background: white;
+  color: #2563eb;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+.order-actions button{
+    margin-top: 8px;
+    margin-left: 30px;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #52bb87;
+}
+/* STATUS COLORS */
+.status.PENDING { background: #f59e0b; color: white;}
+.status.APPROVED { background: #2563eb; color: white;}
+.status.REJECTED { background: #dc2626; color: white;}
+.status.COMPLETED { background: #279b51c5; color: white;}
+
+/* ACTION BUTTONS */
+.approve { background: #22c55e; color: white; }
+.reject { background: #ef4444; color: white; }
+.complete { background: #2563eb; color: white; }
+
+.empty {
+  text-align: center;
+  color: #64748b;
+  margin-top: 30px;
+}
+.pay-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pay-badge.UNPAID {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.pay-badge.PAID {
+  background: #dcfce7;
+  color: #166534;
+}
+.order-tabs button:has(span.zero) {
+  opacity: 0.6;
+}

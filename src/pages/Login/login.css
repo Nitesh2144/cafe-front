@@ -1,0 +1,87 @@
+/* ===== LOGIN PAGE ===== */
+
+.login-container {
+    width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a77a00, #e9ce8b);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.login-box {
+  background: #ffffff;
+  padding: 35px;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+.role-select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.success-text {
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #f8b500;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background: #f8b500;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #e0a800;
+}
+
+.login-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-bottom: 10px;
+  text-align: center;
+}
