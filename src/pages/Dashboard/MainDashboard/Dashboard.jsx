@@ -5,10 +5,10 @@ import Units from "./Screens/Units/Units.jsx";
 import MenuAdmin from "./Screens/Menu/MenuAdmin.jsx";
 import AdminOrders from "./Screens/Orders/AdminOrders.jsx";
 import AdminPlan from "./Screens/Plan/AdminPlan.jsx";
-import "./Dashboard.css";
 import CreateStaff from "./Screens/StaffCreate/CreateStaff.jsx";
 import PayPlanQR from "./Screens/Plan/BusinessPayQR.jsx";
 import InvoiceSettings from "./Screens/Invoice/InvoiceSettings.jsx";
+import "./Dashboard.css";
 
 const Dashboard = () => {
     const businessId = localStorage.getItem("businessId");

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import "./sidebar.css";
+import "./Sidebar.css";
 
 const sidebarMenu = [
   { label: "Home", path: "/admin/dashboard", icon: "🏠", end: true },
