@@ -14,6 +14,11 @@ function App() {
   const isStaff = token && role === "staff";
 
   const navigate = useNavigate();
+  
+const isQrFlow = (() => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("b") && params.get("u");
+})();
 
   // 🔥 QR QUERY PARAM REDIRECT (THIS FIXES PHONE + REFRESH ISSUE)
   useEffect(() => {
@@ -35,20 +40,25 @@ function App() {
       />
 
       {/* ✅ LOGIN / REDIRECT */}
-      <Route
-        path="/"
-        element={
-          !token ? (
-            <Login />
-          ) : isAdmin ? (
-            <Navigate to="/admin/dashboard" replace />
-          ) : isStaff ? (
-            <Navigate to="/staff/dashboard" replace />
-          ) : (
-            <Login />
-          )
-        }
-      />
+<Route
+  path="/"
+  element={
+    isQrFlow ? (
+      <div style={{ padding: 20, textAlign: "center" }}>
+        🍽 Loading menu...
+      </div>
+    ) : !token ? (
+      <Login />
+    ) : isAdmin ? (
+      <Navigate to="/admin/dashboard" replace />
+    ) : isStaff ? (
+      <Navigate to="/staff/dashboard" replace />
+    ) : (
+      <Login />
+    )
+  }
+/>
+
 
       {/* ✅ ADMIN */}
       <Route
