@@ -1,14 +1,19 @@
 import React from 'react'
 import AdminOrders from '../MainDashboard/Screens/Orders/AdminOrders';
+import { useNavigate } from "react-router-dom";
+
+
 const StaffDashboard = () => {
   const businessCode = localStorage.getItem("businessCode");
+const navigate = useNavigate();
 
 const handleLogout = () => {
   const confirmLogout = window.confirm("Are you sure you want to logout?");
 
   if (confirmLogout) {
     localStorage.clear();
-    window.location.href = "/";
+  navigate("/", { replace: true });
+
   }
 };
 

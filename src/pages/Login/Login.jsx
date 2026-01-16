@@ -10,6 +10,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     if (!identifier || !password) {
       setError("Email/Username and password required");
@@ -38,10 +40,11 @@ localStorage.setItem("businessCode", user.business.code);
 localStorage.setItem("businessName", user.business.name); 
 localStorage.setItem("businessType", user.business.type);
 if (role === "admin") {
-  window.location.replace("/admin/dashboard");
+  navigate("/admin/dashboard", { replace: true });
 } else if (role === "staff") {
-  window.location.replace("/staff/dashboard");
+  navigate("/staff/dashboard", { replace: true });
 }
+
 
 
     } catch (err) {

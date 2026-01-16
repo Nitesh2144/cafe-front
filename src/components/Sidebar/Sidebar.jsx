@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 const sidebarMenu = [
@@ -18,10 +18,11 @@ const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const businessName =
     localStorage.getItem("businessName") || "My Business";
+const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = "/";
+    navigate("/", { replace: true });
   };
 
   return (
