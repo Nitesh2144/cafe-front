@@ -1,8 +1,11 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
 import Login from "./pages/Login/Login.jsx";
 import Dashboard from "./pages/Dashboard/MainDashboard/Dashboard.jsx";
 import StaffDashboard from "./pages/Dashboard/Staff/StaffDashboard.jsx";
 import QrMenu from "./pages/Dashboard/Customer/QrMenu.jsx";
+
 function App() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
@@ -10,13 +13,28 @@ function App() {
   const isAdmin = token && role === "admin";
   const isStaff = token && role === "staff";
 
+  const navigate = useNavigate();
+
+  // 🔥 QR QUERY PARAM REDIRECT (THIS FIXES PHONE + REFRESH ISSUE)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const businessCode = params.get("b");
+    const unitCode = params.get("u");
+
+    if (businessCode && unitCode) {
+      navigate(`/b/${businessCode}/u/${unitCode}`, { replace: true });
+    }
+  }, [navigate]);
+
   return (
     <Routes>
-        <Route
+      {/* ✅ CUSTOMER QR MENU */}
+      <Route
         path="/b/:businessCode/u/:unitCode"
         element={<QrMenu />}
       />
 
+      {/* ✅ LOGIN / REDIRECT */}
       <Route
         path="/"
         element={
@@ -32,11 +50,13 @@ function App() {
         }
       />
 
+      {/* ✅ ADMIN */}
       <Route
         path="/admin/dashboard/*"
         element={isAdmin ? <Dashboard /> : <Navigate to="/" replace />}
       />
 
+      {/* ✅ STAFF */}
       <Route
         path="/staff/dashboard/*"
         element={isStaff ? <StaffDashboard /> : <Navigate to="/" replace />}
