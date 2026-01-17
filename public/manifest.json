@@ -1,6 +1,6 @@
 {
-  "name": "QR Menu",
-  "short_name": "QR Menu",
+   "name": "Order On Table",
+  "short_name": "OOT",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
