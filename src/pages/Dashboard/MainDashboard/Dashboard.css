@@ -3,5 +3,9 @@
     height: 100vh;
 }
 .dashboard-content{
-   padding: 25px 100px;
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 20px;
+    background-color: rgb(226, 226, 226);
+   padding: 0;
 }

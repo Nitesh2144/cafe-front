@@ -53,7 +53,7 @@ const Home = ({ businessCode }) => {
   };
 
   if (loading) {
-    return <h3 style={{ padding: 20 }}>Loading dashboard...</h3>;
+    return <h3 style={{ padding: 20, textAlign:"center"}}>Loading dashboard...</h3>;
   }
 
   return (

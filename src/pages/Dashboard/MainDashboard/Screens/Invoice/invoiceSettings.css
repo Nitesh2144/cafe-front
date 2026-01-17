@@ -7,6 +7,7 @@
 }
 
 .invoice-title {
+  text-align: center;
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 20px;
@@ -31,7 +32,7 @@
 }
 
 .form-input {
-  width: 100%;
+  width: 90%;
   margin: 10px;
   padding: 10px 12px;
   border-radius: 8px;

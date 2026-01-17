@@ -18,7 +18,7 @@ const handleLogout = () => {
 };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", margin: "20px", position: "relative" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
       <div style={{ width: "100%", }}>
         <AdminOrders businessCode={businessCode} />
       </div>

@@ -201,10 +201,9 @@ const [showItemForm, setShowItemForm] = useState(false);
   </div>
 )}
 <div className={showItemForm ? "blur-bg" : ""}>
-  <div className="heading">
- <h2 style={{fontSize:"30px",}}>Menu Management</h2>
+<div className="menu-header">
+ <h2>Menu Management</h2>
  {!showItemForm && (
-  <div className="add-item-top">
     <button
       className="add-item-btn"
       onClick={() => {
@@ -213,9 +212,8 @@ const [showItemForm, setShowItemForm] = useState(false);
         setShowItemForm(true);
       }}
     >
-      ➕ Add Item
+      ➕
     </button>
-  </div>
 )}
 </div>
       {/* ================= CATEGORY BAR ================= */}

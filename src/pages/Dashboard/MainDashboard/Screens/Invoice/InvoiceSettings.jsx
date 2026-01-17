@@ -53,42 +53,6 @@ return (
       }
     />
 
-    <label className="form-label checkbox-label">
-      <input
-        className="form-checkbox"
-        type="checkbox"
-        checked={config.showGST}
-        onChange={e =>
-          setConfig({ ...config, showGST: e.target.checked })
-        }
-      />
-      Show GST
-    </label>
-
-    <input
-      className="form-input"
-      type="number"
-      value={config.gstPercent}
-      onChange={e =>
-        setConfig({ ...config, gstPercent: Number(e.target.value) })
-      }
-    />
-
-    <label className="form-label checkbox-label">
-      <input
-        className="form-checkbox"
-        type="checkbox"
-        checked={config.showPaymentStatus}
-        onChange={e =>
-          setConfig({
-            ...config,
-            showPaymentStatus: e.target.checked,
-          })
-        }
-      />
-      Show Payment Status
-    </label>
-
     <label className="form-label">Business Phone Number</label>
     <input
       className="form-input"
@@ -200,6 +164,41 @@ return (
       }
     />
 
+    <label className="form-label checkbox-label">
+      <input
+        className="form-checkbox"
+        type="checkbox"
+        checked={config.showGST}
+        onChange={e =>
+          setConfig({ ...config, showGST: e.target.checked })
+        }
+      />
+      Show GST
+    </label>
+
+    <input
+      className="form-input"
+      type="number"
+      value={config.gstPercent}
+      onChange={e =>
+        setConfig({ ...config, gstPercent: Number(e.target.value) })
+      }
+    />
+
+    <label className="form-label checkbox-label">
+      <input
+        className="form-checkbox"
+        type="checkbox"
+        checked={config.showPaymentStatus}
+        onChange={e =>
+          setConfig({
+            ...config,
+            showPaymentStatus: e.target.checked,
+          })
+        }
+      />
+      Show Payment Status
+    </label>
     <br />
 
     <button className="save-btn" onClick={saveConfig}>

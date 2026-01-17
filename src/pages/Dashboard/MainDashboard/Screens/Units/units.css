@@ -1,18 +1,37 @@
 .units-page {
-  padding: 20px;
+  padding: 1px; 
+    padding: 20px;
+    padding-top: 20px;
 }
+
 .units-page h2{
+  text-align: center;
   padding-bottom: 30px;
   font-size: 30px;
 }
-.unit-form {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.table-x-scroll {
+  width: 100%;
+  overflow-x: auto;   
+  overflow-y: hidden;
+}
+.table-x-scroll {
+  -webkit-overflow-scrolling: touch;
 }
 
-.unit-form input {
-  padding: 8px;
+.unit-form {
+ width: 350px;
+  display: flex;
+flex-direction: column;
+  gap: 30px;
+}
+
+.unit-form input,
+.unit-form select {
+  padding: 8px 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 .unit-form button {
@@ -30,7 +49,7 @@
 
 .unit-table th,
 .unit-table td {
-  border: 1px solid #ddd;
+border: 1px solid #d1c5c5;
   padding: 17px;
    font-size: 17px;
   text-align: center;
@@ -45,6 +64,7 @@
   margin-right: 5px;
   padding: 7px 10px;
   font-size: 13px;
+  border-radius: 5px;
 }
 
 .unit-table .danger {
@@ -116,6 +136,67 @@
 
 .a4-print {
   display: none;
+}
+/* ===== OVERLAY ===== */
+.unit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ===== POPUP ===== */
+.unit-modal {
+  background: #fff;
+  width: 80%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 12px;
+  animation: popup 0.25s ease;
+}
+
+.unit-modal h3 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* ===== FORM ===== */
+.unit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 480px) {
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+    border-radius: 10px;
+  }
+}
+
+/* ===== ANIMATION ===== */
+@keyframes popup {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @media print {

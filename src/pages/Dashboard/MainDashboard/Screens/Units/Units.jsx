@@ -8,6 +8,7 @@ const Units = ({ businessId }) => {
   const [editId, setEditId] = useState(null);
   const [qrData, setQrData] = useState(null);
 const [printUnits, setPrintUnits] = useState([]);
+const [showForm, setShowForm] = useState(false);
 
   const [form, setForm] = useState({
     unitName: "",
@@ -91,6 +92,7 @@ const [printUnits, setPrintUnits] = useState([]);
         unitType: "",
         capacity: "",
       });
+      setShowForm(false); 
       setEditId(null);
       fetchUnits();
     } catch (err) {
@@ -99,15 +101,17 @@ const [printUnits, setPrintUnits] = useState([]);
   };
 
   /* ================= EDIT CLICK ================= */
-  const handleEdit = (unit) => {
-    setEditId(unit._id);
-    setForm({
-      unitName: unit.unitName,
-      unitCode: unit.unitCode,
-      unitType: unit.unitType,
-      capacity: unit.capacity,
-    });
-  };
+const handleEdit = (unit) => {
+  setEditId(unit._id);
+  setShowForm(true); 
+  setForm({
+    unitName: unit.unitName,
+    unitCode: unit.unitCode,
+    unitType: unit.unitType,
+    capacity: unit.capacity,
+  });
+};
+
 
   /* ================= DELETE ================= */
   const handleDelete = async (unitId) => {
@@ -196,6 +200,11 @@ const printQR = () => {
       <h2>Business Units</h2>
 <div style={{display:"flex", justifyContent:"space-between"}}>
       {/* ===== FORM ===== */}
+{showForm && (
+  <div className="unit-overlay">
+    <div className="unit-modal">
+      <h3>{editId ? "Edit Unit" : "Add Unit"}</h3>
+
       <form onSubmit={handleSubmit} className="unit-form">
         <input
           name="unitName"
@@ -234,15 +243,31 @@ const printQR = () => {
           onChange={handleChange}
         />
 
-        <button type="submit">
-          {editId ? "Update Unit" : "Add Unit"}
-        </button>
+        <div className="modal-actions">
+          <button type="submit">
+            {editId ? "Update Unit" : "Save Unit"}
+          </button>
 
+          <button
+            type="button"
+            className="btn danger"
+            onClick={() => {
+              setShowForm(false);
+              setEditId(null);
+            }}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
-        <button className="btn print" onClick={printAllQRs}>
-  🧾 Print A4 QR Sheet
-</button>
+    </div>
+  </div>
+)}
+
+
+
 </div>
+<div className="table-x-scroll">
       {/* ===== LIST ===== */}
       <table className="unit-table">
         <thead>
@@ -292,7 +317,29 @@ const printQR = () => {
           )}
         </tbody>
       </table>
+      </div>
 
+<div style={{ marginTop: "15px", display: "flex", gap: "10px" }}>
+  <button
+    className="btn add"
+    onClick={() => {
+      setShowForm(true);
+      setEditId(null);
+      setForm({
+        unitName: "",
+        unitCode: "",
+        unitType: "",
+        capacity: "",
+      });
+    }}
+  >
+    ➕ Add Unit
+  </button>
+
+  <button className="btn print" onClick={printAllQRs}>
+    🧾 Print A4 QR Sheet
+  </button>
+</div>
       {/* ===== QR MODAL ===== */}
 {qrData && (
   <div className="qr-modal">

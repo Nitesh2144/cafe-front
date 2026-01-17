@@ -292,26 +292,50 @@ const markAsPaid = async (order) => {
   /* ================= UI ================= */
   return (
     <div className="admin-orders">
-      <h2>
-        {isStaff
-          ? `👨‍🍳 Prepare Orders (${staffApprovedCount})`
-          : "📑 Live Orders"}
-      </h2>
-
+   
+{filteredOrders.length > 0 && (
+  <div style={{ marginTop: "1px", marginBottom:"10px",display:"flex", justifyContent:"center" }}>
+  <button
+    onClick={generateCombinedInvoice}
+    style={{
+      height:"35px",
+      marginBottom:"20px",
+      padding: "5px 16px",
+      borderRadius: "8px",
+      backgroundColor: "#5a8ea7",
+      color: "white",
+      fontWeight: "600",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    🖨️ Print Combined
+  </button>
+  </div>
+)}
       {/* ===== TABS ===== */}
      {/* ===== STATUS TABS ===== */}
 {isAdmin && (
-  <div style={{display:"flex", justifyContent:"space-between", position: "relative" }}>
+  <div className="nav">
    <div className="order-tabs">
-  <button
-    className={activeTab === "PENDING" ? "active" : ""}
-    onClick={() => {
-      setActiveTab("PENDING");
-      setShowMoreTabs(false);
-    }}
-  >
-    ⏳ New ({counts.PENDING})
-  </button>
+ 
+<button
+  className={activeTab === "PENDING" ? "active" : ""}
+  onClick={() => {
+    setActiveTab("PENDING");
+    setShowMoreTabs(false);
+  }}
+>
+    <span className="tab-text">New</span>
+  <span className="icon-wrapper">
+    <span className="tab-icon">⏳</span>
+
+    {counts.PENDING > 0 && (
+      <span className="icon-badge">{counts.PENDING}</span>
+    )}
+  </span>
+</button>
+
 
   <button
     className={activeTab === "APPROVED" ? "active" : ""}
@@ -320,7 +344,15 @@ const markAsPaid = async (order) => {
       setShowMoreTabs(false);
     }}
   >
-    ✅ Preparing ({counts.APPROVED})
+<span className="tab-text">Preparing</span>
+      <span className="icon-wrapper">
+    <span className="tab-icon">✅</span>
+
+    {counts.APPROVED > 0 && (
+      <span className="icon-badge">{counts.APPROVED}</span>
+    )}
+  </span>
+
   </button>
 
   <button
@@ -330,9 +362,36 @@ const markAsPaid = async (order) => {
       setShowMoreTabs(false);
     }}
   >
-    🍽 Completed ({counts.COMPLETED})
+<span className="tab-text">Completed</span>
+       <span className="icon-wrapper">
+    <span className="tab-icon">🍽</span>
+
+    {counts.COMPLETED > 0 && (
+      <span className="icon-badge">{counts.COMPLETED}</span>
+    )}
+  </span>
+
   </button>
 
+      <div>
+      <select
+        value={selectedUnit}
+        onChange={(e) => setSelectedUnit(e.target.value)}
+        style={{
+          padding: "8px 14px",
+          borderRadius: "8px",
+          fontWeight: "600",
+          border: "1px solid #ccc",
+          minWidth: "120px"
+        }}
+      >
+        {unitList.map((unit, i) => (
+          <option key={i} value={unit}>
+            {unit === "ALL" ? "🪑 All Units" : `🪑 ${unit}`}
+          </option>
+        ))}
+      </select>
+    </div>
   {/* MORE BUTTON */}
   <button
     className={
@@ -342,22 +401,15 @@ const markAsPaid = async (order) => {
     }
     onClick={() => setShowMoreTabs(prev => !prev)}
   >
-    ⋮ 
+<span className="tab-icon">⋮</span>
+<span className="tab-text">More</span>
   </button>
+   
+
 </div>
 {showMoreTabs && (
   <div
-    style={{
-      position: "absolute",     // 🔥 KEY FIX
-      top: "55px",              // tabs ke niche
-      left: "0",
-      padding: "8px",
-      borderRadius: "8px",
-      background: "#f1f5f9",
-      width: "220px",
-      boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-      zIndex: 100
-    }}
+   className="moreButton"
   >
 
     <button
@@ -403,44 +455,7 @@ const markAsPaid = async (order) => {
 
 
     {/* ===== UNIT FILTER ===== */}
-    <div style={{ marginTop: "15px" }}>
-      <select
-        value={selectedUnit}
-        onChange={(e) => setSelectedUnit(e.target.value)}
-        style={{
-          padding: "8px 14px",
-          borderRadius: "8px",
-          fontWeight: "600",
-          border: "1px solid #ccc",
-          minWidth: "180px"
-        }}
-      >
-        {unitList.map((unit, i) => (
-          <option key={i} value={unit}>
-            {unit === "ALL" ? "🪑 All Units" : `🪑 ${unit}`}
-          </option>
-        ))}
-      </select>
-    </div>
-{filteredOrders.length > 0 && (
-  <button
-    onClick={generateCombinedInvoice}
-    style={{
-      height:"35px",
-      marginTop: "15px",
-      marginBottom:"20px",
-      padding: "5px 16px",
-      borderRadius: "8px",
-      backgroundColor: "#5a8ea7",
-      color: "white",
-      fontWeight: "600",
-      border: "none",
-      cursor: "pointer"
-    }}
-  >
-    🖨️ Print Combined
-  </button>
-)}
+
 
 
   </div>
@@ -452,6 +467,7 @@ const markAsPaid = async (order) => {
         <p className="empty">No orders</p>
       ) : (
         filteredOrders.map(order => (
+          <div className="order-card-main">
           <div key={order._id} className="order-card">
             <div className="order-header">
               <b>🪑 {order.unitName}</b>
@@ -530,6 +546,7 @@ const markAsPaid = async (order) => {
                   </button>
                 )}
             </div>
+          </div>
           </div>
         ))
       )}

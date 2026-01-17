@@ -1,13 +1,10 @@
-/* ================= ROOT ================= */
-.heading{
-  display: flex;
-  justify-content: space-between;
-}
 .menu-admin {
-  padding: 16px;
+  padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
   position: relative;
   transition: filter 0.25s ease;
+   padding: 20px;
+    padding-top: 20px;
 }
 
 .blur-bg {
@@ -17,24 +14,39 @@
   user-select: none;
 }
 
-
-/* ================= ADD ITEM TOP BAR ================= */
-.add-item-top {
-  width: 120px;
+.menu-header {
+    position: relative;
   display: flex;
-  justify-content: flex-end;
-
+  align-items: center;
+  justify-content: center; /* 🔥 left title, right button */
+  margin-bottom: 15px;
 }
 
+.menu-header h2 {
+  padding-right: 10px;
+  font-size: 30px;
+  margin: 0;
+  text-align: center;
+}
+
+/* Add Item Button */
 .add-item-btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #000;
+    position: absolute;
+  right: 0;   
+  background: #9eb4d6;
   color: #fff;
+  padding: 10px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-size: 14px;
   font-weight: 500;
 }
+
+.add-item-btn:hover {
+  opacity: 0.9;
+}
+
 
 .add-item-btn:hover {
   opacity: 0.9;
@@ -145,11 +157,12 @@ flex-direction: column;
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  
 }
 
 .menu-table th,
 .menu-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #d1c5c5;
   padding: 8px;
    font-size: 16px;
   text-align: center;
@@ -279,4 +292,13 @@ flex-direction: column;
     opacity: 1;
     transform: translateY(0);
   }
+}
+@media (max-width: 768px) {
+.item-form-overlay {
+  width: 370px;
+  position: fixed;
+  top: 20%;
+  left: 0;
+  z-index: 50;
+}
 }
