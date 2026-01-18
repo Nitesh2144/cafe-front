@@ -11,6 +11,7 @@ const sidebarMenu = [
   { label: "Add Staff", path: "/admin/dashboard/staff", icon: "👨‍🍳" },
   { label: "Invoice", path: "/admin/dashboard/invoice", icon: "🧾" },
   { label: "Plan", path: "/admin/dashboard/planman", icon: "💳" },
+   { label: "Settings", path: "/admin/dashboard/setting", icon: "🛞" },
   // { label: "Plan", path: "/admin/dashboard/plan", icon: MdListAlt  },
 ];
 

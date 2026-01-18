@@ -9,42 +9,47 @@ import CreateStaff from "./Screens/StaffCreate/CreateStaff.jsx";
 import PayPlanQR from "./Screens/Plan/BusinessPayQR.jsx";
 import InvoiceSettings from "./Screens/Invoice/InvoiceSettings.jsx";
 import "./Dashboard.css";
+import OrderSettings from "./Screens/Settings/OrderSettings.jsx";
 
 const Dashboard = () => {
-    const businessId = localStorage.getItem("businessId");
-      const businessCode = localStorage.getItem("businessCode");
+  const businessId = localStorage.getItem("businessId");
+  const businessCode = localStorage.getItem("businessCode");
   return (
-    <div className="dashboard-main" style={{margin:0, padding:0}}>
+    <div className="dashboard-main" style={{ margin: 0, padding: 0 }}>
       <Sidebar />
       <div className="dashboard-content">
-       
+
         <Routes>
-     <Route index element={<Home businessCode={businessCode}/>} />
-          <Route path="/units" element={<Units businessId={businessId} businessCode={businessCode}/>} />
-<Route
-  path="/menu"
-  element={<MenuAdmin businessId={businessId}  businessCode={businessCode}/>}
-/>
-<Route
-  path="/order"
-  element={<AdminOrders businessId={businessId}  businessCode={businessCode}/>}
-/>
-<Route
-  path="/staff"
-  element={<CreateStaff businessCode={businessCode}/>}
-/>
-<Route
-  path="/plan"
-  element={<AdminPlan businessCode={businessCode}/>}
-/>
-<Route
-  path="/planman"
-  element={<PayPlanQR businessCode={businessCode}/>}
-/>
-<Route
-  path="/invoice"
-  element={<InvoiceSettings businessCode={businessCode}/>}
-/>
+          <Route index element={<Home businessCode={businessCode} />} />
+          <Route path="/units" element={<Units businessId={businessId} businessCode={businessCode} />} />
+          <Route
+            path="/menu"
+            element={<MenuAdmin businessId={businessId} businessCode={businessCode} />}
+          />
+          <Route
+            path="/order"
+            element={<AdminOrders businessId={businessId} businessCode={businessCode} />}
+          />
+          <Route
+            path="/staff"
+            element={<CreateStaff businessCode={businessCode} />}
+          />
+          <Route
+            path="/plan"
+            element={<AdminPlan businessCode={businessCode} />}
+          />
+          <Route
+            path="/planman"
+            element={<PayPlanQR businessCode={businessCode} />}
+          />
+          <Route
+            path="/invoice"
+            element={<InvoiceSettings businessCode={businessCode} />}
+          />
+          <Route
+            path="/setting"
+            element={<OrderSettings businessCode={businessCode} />}
+          />
         </Routes>
       </div>
     </div>
