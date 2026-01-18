@@ -484,16 +484,36 @@ const markAsPaid = async (order) => {
               )}
             </div>
 
-            <div className="order-items">
-              {order.items.map((item, i) => (
-                <div key={i} className="order-item">
-                  <span>{item.name}</span>
-                  <span>
-                    {item.quantity} × ₹{item.price}
-                  </span>
-                </div>
-              ))}
-            </div>
+         <div className="order-items">
+  {order.items.map((item, i) => (
+    <div key={i} className="order-item">
+      <div style={{width:"20%",display:"flex",}}>
+        <span>{item.name}</span>
+
+        {/* 📝 ITEM NOTE */}
+        {item.note && (
+          <div
+            style={{
+              fontSize: "14px",
+              fontWeight:600,
+              color: "#1e200c",
+              marginTop: "2px",
+              marginLeft:"10px",
+              fontStyle: "italic",
+            }}
+          >
+            ({item.note})
+          </div>
+        )}
+      </div>
+
+      <span>
+        {item.quantity} × ₹{item.price}
+      </span>
+    </div>
+  ))}
+</div>
+
 
             <div className="order-footer">
               <span>
@@ -547,6 +567,7 @@ const markAsPaid = async (order) => {
                 )}
             </div>
           </div>
+       
           </div>
         ))
       )}
