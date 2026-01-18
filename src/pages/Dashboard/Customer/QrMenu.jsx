@@ -24,23 +24,26 @@ useEffect(() => {
 
   socket.emit("join-business", businessCode);
 
-socket.on(
-  "order-status-update",
-  ({ orderId: id, status, paymentStatus }) => {
+  // 🟡 Order status change (PENDING → APPROVED → COMPLETED)
+  socket.on("order-status-update", ({ orderId: id, status }) => {
     if (id === orderId) {
       setOrderStatus(status);
-      if (paymentStatus) {
-        setPaymentStatus(paymentStatus);
-      }
     }
-  }
-);
+  });
 
+  // 🟢 Payment update (UNPAID → PAID)
+  socket.on("payment-updated", ({ orderId: id, paymentStatus }) => {
+    if (id === orderId) {
+      setPaymentStatus(paymentStatus);
+    }
+  });
 
   return () => {
     socket.off("order-status-update");
+    socket.off("payment-updated");
   };
 }, [businessCode, orderId]);
+
 
 
     // 🛒 CART STATE
@@ -214,7 +217,9 @@ const grandTotal = placedOrders.reduce(
 
     return (
       <div className="qr-container">
-{placedOrders.length > 0 && orderStatus !== "COMPLETED" && (
+{placedOrders.length > 0 &&
+  orderStatus !== "COMPLETED" &&
+  paymentStatus !== "PAID" && (
   <div
     className="top-cart-icon"
     onClick={() => setShowOrderSummary((p) => !p)}
@@ -305,7 +310,9 @@ const grandTotal = placedOrders.reduce(
             </button>
           </div>
         )}
-{showOrderSummary && orderStatus !== "COMPLETED" && (
+{showOrderSummary &&
+  orderStatus !== "COMPLETED" &&
+  paymentStatus !== "PAID" && (
   <div
     className="order-overlay"
     onClick={() => setShowOrderSummary(false)}
