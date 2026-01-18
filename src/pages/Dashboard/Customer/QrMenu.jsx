@@ -181,17 +181,7 @@ setPlacedOrders([]);
     }, 4000);
   }
 }, [orderStatus, paymentStatus]);
-useEffect(() => {
-  if (showOrderSummary) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
 
-  return () => {
-    document.body.style.overflow = "auto";
-  };
-}, [showOrderSummary]);
 useEffect(() => {
   const handleBeforeUnload = (e) => {
     // 🔒 Lock only when order is active
@@ -217,7 +207,7 @@ const grandTotal = placedOrders.reduce(
 const getOrderStatusLabel = (status) => {
   switch (status) {
     case "PENDING":
-      return "Order Received";
+      return "PENDING";
     case "APPROVED":
       return "Preparing";
     case "COMPLETED":

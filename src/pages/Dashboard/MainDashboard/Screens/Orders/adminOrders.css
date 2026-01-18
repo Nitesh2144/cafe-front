@@ -134,7 +134,9 @@
   cursor: pointer;
   color: #050505;
 }
-
+.order-actions button:hover{
+background-color: #29344470;
+}
 .approve { background: #22c55e; }
 .reject { background: #ef4444; }
 .complete { background: #2563eb; }

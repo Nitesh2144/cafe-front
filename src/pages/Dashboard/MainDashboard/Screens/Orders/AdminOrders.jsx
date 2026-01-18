@@ -534,7 +534,7 @@ const markAsPaid = async (order) => {
                     ✅ Accept
                   </button>
                   <button
-                  style={{backgroundColor:"#794747"}}
+                  style={{backgroundColor:"#794747", color:"white"}}
                     onClick={() =>
                       updateStatus(order._id, "REJECTED")
                     }
@@ -551,7 +551,7 @@ const markAsPaid = async (order) => {
                     updateStatus(order._id, "COMPLETED")
                   }
                 >
-                  🍽 Complete
+                  🍽 Ready
                 </button>
               )}
 
