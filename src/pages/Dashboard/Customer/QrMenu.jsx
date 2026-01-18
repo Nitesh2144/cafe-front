@@ -346,9 +346,11 @@ const getOrderStatusLabel = (status) => {
             </div>
           ))}
 
-          <div className="summary-total">
+         <div style={{display:"flex",justifyContent:"end"}}>
+           <div className="summary-total">
             Total: ₹{order.totalAmount}
           </div>
+         </div>
         </div>
       ))}
 
