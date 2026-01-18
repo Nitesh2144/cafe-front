@@ -214,6 +214,18 @@ const grandTotal = placedOrders.reduce(
   (sum, order) => sum + order.totalAmount,
   0
 );
+const getOrderStatusLabel = (status) => {
+  switch (status) {
+    case "PENDING":
+      return "Order Received";
+    case "APPROVED":
+      return "Preparing";
+    case "COMPLETED":
+      return "Ready";
+    default:
+      return status;
+  }
+};
 
     return (
       <div className="qr-container">
@@ -244,12 +256,12 @@ const grandTotal = placedOrders.reduce(
           ))}
         </div>
 
-        {/* 🍽 MENU GRID */}
-                            {orderStatus && (
+{orderStatus && (
   <div className={`order-status ${orderStatus.toLowerCase()}`}>
-    🧾 Order Status: <b>{orderStatus}</b>
+    🧾 Order Status: <b>{getOrderStatusLabel(orderStatus)}</b>
   </div>
 )}
+
         <div className="menu-grid">
           {filteredMenu.map((item) => {
             const qty = getQty(item._id);

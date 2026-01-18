@@ -362,7 +362,7 @@ const markAsPaid = async (order) => {
       setShowMoreTabs(false);
     }}
   >
-<span className="tab-text">Completed</span>
+<span className="tab-text">Ready</span>
        <span className="icon-wrapper">
     <span className="tab-icon">🍽</span>
 
