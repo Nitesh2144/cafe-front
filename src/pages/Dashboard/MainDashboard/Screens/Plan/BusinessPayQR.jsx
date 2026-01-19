@@ -5,7 +5,7 @@ import API_URLS from "../../../../../services/api.js";
 import "./PayPlanQR.css";
 
 const BusinessPayQR = ({ businessCode }) => {
-  const [duration, setDuration] = useState("MONTHLY");
+ const [duration, setDuration] = useState("YEARLY");
   const [upiUrl, setUpiUrl] = useState("");
   const [amount, setAmount] = useState(0);
 const [loading, setLoading] = useState(false);
@@ -15,19 +15,29 @@ const [paidSubmitting, setPaidSubmitting] = useState(false);
   const businessType = localStorage.getItem("businessType"); 
   // CAFE / RESTAURANT
 
-  useEffect(() => {
-    if (!businessType) return;
+useEffect(() => {
+  if (!businessCode || !businessType || !duration) return;
 
-    generateQR();
-  }, [duration, businessType]);
+  generateQR();
+}, [duration, businessType, businessCode]);
+
 
 const generateQR = async () => {
   try {
     setLoading(true);
-    const res = await axios.post(
-      `${API_URLS.MANUALLYPAY}/generate-qr`,
-      { businessCode, planType: businessType, duration }
-    );
+const token = localStorage.getItem("token");
+
+const res = await axios.post(
+  `${API_URLS.MANUALLYPAY}/generate-qr`,
+  {
+    businessCode,
+    businessType,
+    planType: duration,
+  },
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
 
     setUpiUrl(res.data.upiUrl);
     setAmount(res.data.amount);
@@ -69,6 +79,25 @@ return (
       {/* ⬅ LEFT : PLAN DETAILS */}
       <div className="plan-left">
         <h3 className="section-title">📦 Current Plan</h3>
+{business?.isTrialActive && business?.trialEndDate && (
+  <>
+    <p className="trial-text">
+      🆓 Free Trial ends on:{" "}
+      {new Date(business.trialEndDate).toDateString()}
+    </p>
+
+    <p className="trial-days">
+      ⏳ {Math.max(
+        0,
+        Math.ceil(
+          (new Date(business.trialEndDate) - new Date()) /
+          (1000 * 60 * 60 * 24)
+        )
+      )} days left
+    </p>
+  </>
+)}
+
 
         {business?.isPlanActive ? (
           <div className="plan-status-card">
@@ -91,22 +120,24 @@ return (
       <div className="payqr-right">
         <h3 className="section-title">💳 Recharge Plan</h3>
 
-        {/* Tabs */}
-        <div className="tab-switch">
-          <button
-            className={duration === "MONTHLY" ? "active" : ""}
-            onClick={() => setDuration("MONTHLY")}
-          >
-            Monthly
-          </button>
+<div className="tab-switch">
+  <button
+    className={duration === "HALF_YEARLY" ? "active" : ""}
+    onClick={() => setDuration("HALF_YEARLY")}
+  >
+    6 Months
+  </button>
 
-          <button
-            className={duration === "YEARLY" ? "active" : ""}
-            onClick={() => setDuration("YEARLY")}
-          >
-            Yearly ⭐
-          </button>
-        </div>
+  <button
+    className={duration === "YEARLY" ? "active" : ""}
+    onClick={() => setDuration("YEARLY")}
+  >
+    Yearly ⭐
+  </button>
+</div>
+
+
+
 
         {/* QR */}
         <div className="qr-box">
@@ -129,25 +160,35 @@ return (
           Scan & pay → Plan activates after admin approval
         </small>
 
-        <button
-          className="payqr-confirm-btn"
-          disabled={paidSubmitting}
-          onClick={async () => {
-            try {
-              setPaidSubmitting(true);
-              await axios.post(
-                `${API_URLS.MANUALLYPAY}/user-paid`,
-                { businessCode, planType: businessType, duration },
-                { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-              );
-              alert("✅ Payment submitted for admin approval");
-            } catch (err) {
-              alert("❌ Something went wrong");
-            } finally {
-              setPaidSubmitting(false);
-            }
-          }}
-        >
+       <button
+  className="payqr-confirm-btn"
+  disabled={paidSubmitting}
+  onClick={async () => {
+    const token = localStorage.getItem("token");
+    try {
+      setPaidSubmitting(true);
+
+      await axios.post(
+        `${API_URLS.MANUALLYPAY}/user-paid`,
+        {
+          businessCode,
+          businessType,
+          planType: duration,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      alert("✅ Payment submitted for admin approval");
+    } catch (err) {
+      alert("❌ Something went wrong");
+    } finally {
+      setPaidSubmitting(false);
+    }
+  }}
+>
+  
           {paidSubmitting ? "Submitting..." : "I Have Paid"}
         </button>
       </div>
