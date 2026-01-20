@@ -114,7 +114,7 @@ doc.text(line, centerX, y, { align: "center" });
   /* ===== ITEMS ===== */
   y += 4;
 doc.text(
-  is58 ? "Item        Qty   Rate   Amt" : "Item               Qty    Rate    Amt",
+  is58 ? "Item               Qty   Rate   Amt" : "Item               Qty    Rate    Amt",
   4,
   y
 );
