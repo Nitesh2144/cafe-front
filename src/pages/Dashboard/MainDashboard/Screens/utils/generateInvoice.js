@@ -177,14 +177,20 @@ doc.text(config.footerText || "Thank You! Visit Again", centerX, y, { align: "ce
     align: "center",
   });
 
-    doc.autoPrint();
+ const pdfBlob = doc.output("bloburl");
 
-  // ✅ Open print dialog
-  const pdfBlob = doc.output("bloburl");
-  const printWindow = window.open(pdfBlob);
+  // Android Chrome → open PDF
+  const printWindow = window.open(pdfBlob, "_blank");
 
   if (!printWindow) {
-    alert("Please allow popups for printing");
+    alert("Popup blocked. Please allow popups.");
+    return;
   }
+
+  // ⏳ wait for PDF load then print
+  printWindow.onload = () => {
+    printWindow.focus();
+    printWindow.print();
+  };
 };
 
