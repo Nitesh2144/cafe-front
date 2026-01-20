@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import "./adminOrders.css";
 import API_URLS from "../../../../../services/api.js";
 import { generateThermalInvoice } from "../utils/generateInvoice.js";
-
+import ManualOrderForm from "./ManualOrderForm.jsx";
 const socket = io("https://cafe-backend-28q0.onrender.com");
 
 const AdminOrders = ({ businessCode }) => {
@@ -32,10 +32,6 @@ const [showMoreTabs, setShowMoreTabs] = useState(false);
       o => o.orderStatus === "COMPLETED" && o.paymentStatus === "PAID"
     ).length,
   };
-
-  const staffApprovedCount = orders.filter(
-    o => o.orderStatus === "APPROVED"
-  ).length;
 
 const unitList = [
   "ALL",
@@ -91,10 +87,10 @@ const consolidatedOrder = {
   try {
     /* 🖨️ 1️⃣ PRINT INVOICE */
     generateThermalInvoice(consolidatedOrder, {
-      ...invoiceConfig,
-      businessName: localStorage.getItem("businessName"),
-      phone: invoiceConfig?.businessPhone || "",
-      businessAddress: invoiceConfig?.businessAddress || {},
+    ...invoiceConfig,
+  businessName: localStorage.getItem("businessName"),
+  businessPhone: invoiceConfig?.businessPhone || "", // ✅ FIX
+  businessAddress: invoiceConfig?.businessAddress || {},
     });
 
     /* 💰 2️⃣ MARK ALL FILTERED ORDERS AS PAID */
@@ -220,15 +216,13 @@ const markAsPaid = async (order) => {
     );
 
     // 3️⃣ Invoice UPDATED order se print karo
-    generateThermalInvoice(
-      updatedOrder,
-      {
-        ...invoiceConfig,
-        businessName: localStorage.getItem("businessName"),
-        phone: invoiceConfig?.businessPhone || "",
-        businessAddress: invoiceConfig?.businessAddress || {},
-      }
-    );
+generateThermalInvoice(updatedOrder, {
+  ...invoiceConfig,
+  businessName: localStorage.getItem("businessName"),
+  businessPhone: invoiceConfig?.businessPhone || "", // ✅ FIX
+  businessAddress: invoiceConfig?.businessAddress || {},
+});
+
 
   } catch (err) {
     console.error("Mark as paid error:", err);
@@ -293,7 +287,9 @@ const markAsPaid = async (order) => {
   return (
     <div className="admin-orders">
    
-{filteredOrders.length > 0 && (
+{isAdmin &&
+(activeTab === "APPROVED" || activeTab === "COMPLETED") &&
+filteredOrders.length > 0 && (
   <div style={{ marginTop: "1px", marginBottom:"10px",display:"flex", justifyContent:"center" }}>
   <button
     onClick={generateCombinedInvoice}
@@ -318,7 +314,12 @@ const markAsPaid = async (order) => {
 {isAdmin && (
   <div className="nav">
    <div className="order-tabs">
- 
+  <button
+   className={activeTab === "ADD_ORDER" ? "active" : ""}
+    onClick={() => setActiveTab("ADD_ORDER")}
+  >
+    ➕ Add Order
+  </button>
 <button
   className={activeTab === "PENDING" ? "active" : ""}
   onClick={() => {
@@ -461,14 +462,22 @@ const markAsPaid = async (order) => {
   </div>
 )}
 
+{activeTab === "ADD_ORDER" && (
+  <ManualOrderForm
+    businessCode={businessCode}
+    onSuccess={() => setActiveTab("PENDING")}
+  />
+)}
 
       {/* ===== ORDERS ===== */}
-      {filteredOrders.length === 0 ? (
-        <p className="empty">No orders</p>
-      ) : (
-        filteredOrders.map(order => (
-          <div className="order-card-main">
-          <div key={order._id} className="order-card">
+      {/* ===== ORDERS ===== */}
+{activeTab !== "ADD_ORDER" && (
+  filteredOrders.length === 0 ? (
+    <p className="empty">No orders</p>
+  ) : (
+    filteredOrders.map(order => (
+    <div key={order._id} className="order-card-main">
+          <div className="order-card">
             <div className="order-header">
               <b>🪑 {order.unitName}</b>
 
@@ -569,8 +578,10 @@ const markAsPaid = async (order) => {
           </div>
        
           </div>
-        ))
-      )}
+    ))
+  )
+)}
+
     </div>
   );
 };

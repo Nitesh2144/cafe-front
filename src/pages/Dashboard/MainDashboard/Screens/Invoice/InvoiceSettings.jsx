@@ -11,7 +11,7 @@ const defaultConfig = {
   invoicePrefix: "INV-",
   footerText: "Thank you for your visit!",
   businessPhone: "",
-
+  paperSize: "80mm",
     businessAddress: {
     street: "",
     area: "",
@@ -163,6 +163,18 @@ return (
         setConfig({ ...config, footerText: e.target.value })
       }
     />
+<label className="form-label">Paper Size</label>
+<select
+  className="form-input"
+  value={config.paperSize}
+  onChange={(e) =>
+    setConfig({ ...config, paperSize: e.target.value })
+  }
+>
+  <option value="58mm">58 mm (Small Printer)</option>
+  <option value="80mm">80 mm (Thermal Printer)</option>
+  <option value="A4">A4 (Normal Printer)</option>
+</select>
 
     <label className="form-label checkbox-label">
       <input

@@ -184,7 +184,7 @@ const printQR = () => {
       </head>
       <body>
         <img src="${qrData.qrImage}" />
-        <div class="code">${qrData.unitCode.toUpperCase()}</div>
+        <div class="code">${(qrData?.unitCode || "").toUpperCase()}</div>
       </body>
     </html>
   `);
@@ -349,9 +349,10 @@ const printQR = () => {
       </button>
 
       <img src={qrData.qrImage} alt="QR" />
-      <div className="qr-unit-code">
-        {qrData.unitCode.toUpperCase()}
-      </div>
+    <div className="qr-unit-code">
+  {(qrData?.unitCode || "").toUpperCase()}
+</div>
+
 
       <button className="btn print" onClick={printQR}>
         🖨 Print
@@ -364,9 +365,10 @@ const printQR = () => {
     {printUnits.map((u) => (
       <div key={u._id} className="qr-item">
         <img src={u.qrImage} alt={u.unitCode} />
-        <div className="qr-code-text">
-          {u.unitCode.toUpperCase()}
-        </div>
+     <div className="qr-code-text">
+  {(u.unitCode || "").toUpperCase()}
+</div>
+
       </div>
     ))}
   </div>

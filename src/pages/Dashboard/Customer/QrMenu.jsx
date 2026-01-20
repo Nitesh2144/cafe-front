@@ -243,7 +243,9 @@ const getOrderStatusLabel = (status) => {
             >
               {cat}
             </button>
+          
           ))}
+            <div style={{width:"30px", height:"10px", marginLeft:"50px"}}></div>
         </div>
 
 {orderStatus && (

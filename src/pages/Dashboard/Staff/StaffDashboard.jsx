@@ -19,20 +19,21 @@ const handleLogout = () => {
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
-      <div style={{ width: "100%", }}>
-        <AdminOrders businessCode={businessCode} />
-      </div>
-      <div className="sidebar-footer" style={{
+        <div className="sidebar-footer" style={{
         position: "absolute",
         top: "20px",
         right: "10px",
-        padding: "10px",
+        padding: "5px",
        zIndex:"10"}}>
-      <button style={{ padding: 10, borderRadius: "20px", border: "none", 
-        background: "#974d2b", cursor: "pointer", color: "white" }} onClick={handleLogout}>
-        🚪 Logout
+      <button style={{ padding: 5, borderRadius: "20px", border: "none", 
+        background: "#974d2b", cursor: "pointer", color: "white", width:"40px", height:"40px" , fontSize:"18px"}} onClick={handleLogout}>
+         ⏻
       </button>
     </div>
+      <div style={{ width: "100%", }}>
+        <AdminOrders businessCode={businessCode} />
+      </div>
+    
    
         </div >
   )

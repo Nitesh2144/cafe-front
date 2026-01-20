@@ -1,4 +1,4 @@
-const BASE_URL =  "https://cafe-backend-28q0.onrender.com";
+const BASE_URL = "https://cafe-backend-28q0.onrender.com";
 
 // Saare endpoints ek object me
 export const API_URLS = {
