@@ -11,6 +11,7 @@ const ManualOrderForm = ({ businessCode, onSuccess }) => {
 const [orders, setOrders] = useState([]);
 const [categories, setCategories] = useState([]);
 const [units, setUnits] = useState([]);
+const [orderType, setOrderType] = useState("DINE_IN");
 
 
   // ✅ NEW
@@ -69,6 +70,14 @@ const getItemQty = (itemId) => {
       return matchCategory && matchSearch;
     });
   }, [menu, selectedCategory, search]);
+// 🔴 Occupied tables ka set
+const occupiedUnitCodes = useMemo(() => {
+  return new Set(
+    orders
+      .filter(o => o.isOccupied === true)
+      .map(o => o.unitCode)
+  );
+}, [orders]);
 
   /* ================= CART ================= */
 const addItem = (item) => {
@@ -130,6 +139,7 @@ const decreaseQty = (itemId) => {
     await axios.post(`${API_URLS.ORDER}/place`, {
       businessCode,
       unitCode,
+        orderType,
       items: cart.map(i => ({
         itemId: i.itemId,
         quantity: i.quantity
@@ -205,6 +215,8 @@ const decreaseQty = (itemId) => {
       </div>
       {/* RIGHT CART */}
       <div className="fk-cart">
+<div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+  {/* 🪑 TABLE SELECT */}
 <select
   className="fk-table"
   value={unitCode}
@@ -212,17 +224,28 @@ const decreaseQty = (itemId) => {
 >
   <option value="">Select Table</option>
 
-  {units.map(u => (
-    <option key={u._id} value={u.unitCode}>
-      {u.unitName}
-    </option>
-  ))}
+  {units.map(u => {
+    const isOccupied = occupiedUnitCodes.has(u.unitCode);
+
+    return (
+      <option key={u._id} value={u.unitCode}>
+        {u.unitName} {isOccupied ? "🔴 Occupied" : "🟢 Free"}
+      </option>
+    );
+  })}
 </select>
 
 
-
-
-
+  {/* 📦 ORDER TYPE SELECT */}
+  <select
+    className="fk-table"
+    value={orderType}
+    onChange={e => setOrderType(e.target.value)}
+  >
+    <option value="DINE_IN">🍽 Dine In</option>
+    <option value="PARCEL">📦 Parcel</option>
+  </select>
+</div>
 
 
         <div className="fk-cart-list">

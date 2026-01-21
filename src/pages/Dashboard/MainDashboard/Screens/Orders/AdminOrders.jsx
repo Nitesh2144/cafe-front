@@ -318,7 +318,9 @@ filteredOrders.length > 0 && (
    className={activeTab === "ADD_ORDER" ? "active" : ""}
     onClick={() => setActiveTab("ADD_ORDER")}
   >
-    ➕ Add Order
+      <span className="tab-icon">➕</span>
+    <span className="tab-text">Add Order</span>
+    
   </button>
 <button
   className={activeTab === "PENDING" ? "active" : ""}
@@ -478,20 +480,38 @@ filteredOrders.length > 0 && (
     filteredOrders.map(order => (
     <div key={order._id} className="order-card-main">
           <div className="order-card">
-            <div className="order-header">
-              <b>🪑 {order.unitName}</b>
+     <div className="order-header">
+  <b style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+    🪑 {order.unitName}
 
-              {isAdmin && (
-                <div className="badges">
-                  <span className={`pay-badge ${order.paymentStatus}`}>
-                    {order.paymentStatus}
-                  </span>
-                  <span className={`status ${order.orderStatus}`}>
-                    {order.orderStatus}
-                  </span>
-                </div>
-              )}
-            </div>
+    {/* 🔥 PARCEL / DINE IN BADGE */}
+    <span
+      style={{
+        padding: "2px 8px",
+        borderRadius: "6px",
+        fontSize: "12px",
+        fontWeight: "700",
+        backgroundColor:
+          order.orderType === "PARCEL" ? "#f97316" : "#16a34a",
+        color: "white",
+      }}
+    >
+      {order.orderType === "PARCEL" ? "PARCEL" : "DINE IN"}
+    </span>
+  </b>
+
+  {isAdmin && (
+    <div className="badges">
+      <span className={`pay-badge ${order.paymentStatus}`}>
+        {order.paymentStatus}
+      </span>
+      <span className={`status ${order.orderStatus}`}>
+        {order.orderStatus}
+      </span>
+    </div>
+  )}
+</div>
+
 
          <div className="order-items">
   {order.items.map((item, i) => (

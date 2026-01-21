@@ -1,6 +1,6 @@
 const BASE_URL = "https://cafe-backend-28q0.onrender.com";
+// const BASE_URL = "http://10.112.25.238:5000"; 
 
-// Saare endpoints ek object me
 export const API_URLS = {
   LOGIN: `${BASE_URL}/api/entry`,
  UNIT: `${BASE_URL}/api/unit`,
