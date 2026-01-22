@@ -56,6 +56,52 @@ const getItemQty = (itemId) => {
   const found = cart.find(i => i.itemId === itemId);
   return found ? found.quantity : 0;
 };
+const LazyImage = ({ src, alt, size = 130 }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        position: "relative",
+        margin: "0 auto",
+        borderRadius: 8,
+        overflow: "hidden",
+        background: "#e5e7eb",
+        flexShrink: 0,
+      }}
+    >
+      {!loaded && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "#e5e7eb",
+          }}
+        />
+      )}
+
+      <img
+        src={error ? "/no-img.png" : src}
+        alt={alt}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        onError={() => {
+          setError(true);
+          setLoaded(true);
+        }}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        }}
+      />
+    </div>
+  );
+};
+
 
   /* ================= FILTERED MENU ================= */
   const filteredMenu = useMemo(() => {
@@ -181,7 +227,7 @@ const decreaseQty = (itemId) => {
         {/* ITEMS */}
         {filteredMenu.map(item => (
           <div key={item._id} className="fk-menu-item">
-            <img src={item.image || "/no-img.png"} />
+           <LazyImage size={130} src={item.image || "/no-img.png"} alt={item.name} />
             <div className="fk-info">
               <p className="name">{item.name}</p>
               <p className="price">₹{item.price}</p>
@@ -251,7 +297,8 @@ const decreaseQty = (itemId) => {
         <div className="fk-cart-list">
           {cart.map(i => (
             <div key={i.itemId} className="fk-cart-item">
-              <img src={i.image || "/no-img.png"} />
+              <LazyImage size={45} src={i.image || "/no-img.png"} alt={i.name} />
+
               <div className="fk-cart-info">
                 <p>{i.name}</p>
                 <span>₹{i.price}</span>

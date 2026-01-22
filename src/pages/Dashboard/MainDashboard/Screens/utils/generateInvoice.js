@@ -29,7 +29,7 @@ const line = "-".repeat(is58 ? 32 : 40);
 
 // 🔢 Dynamic height calculation
 const HEADER_HEIGHT = 35;
-const FOOTER_HEIGHT = 50;
+const FOOTER_HEIGHT = 40;
 const ITEM_HEIGHT = 8;
 
 const itemsHeight = order.items.length * ITEM_HEIGHT;
@@ -83,7 +83,7 @@ doc.setFontSize(smallFont);
   });
  
 }
-  y += 10;
+  y += 8;
   doc.text(
     `Phone: ${config.businessPhone || "XXXXXXXXXX"}`,
     centerX,
@@ -91,7 +91,7 @@ doc.setFontSize(smallFont);
     { align: "center" }
   );
 
-  y += 6;
+  y += 4;
  doc.text(line, centerX, y, { align: "center" });
 
 
@@ -108,13 +108,13 @@ doc.text(`Bill No: ${billNo}`, 4, y);
     y
   );
 
-  y += 6;
+  y += 4;
 doc.text(line, centerX, y, { align: "center" });
 
   /* ===== ITEMS ===== */
   y += 4;
 doc.text(
-  is58 ? "Item               Qty   Rate     Amt" : "Item               Qty    Rate      Amt",
+  is58 ? "Item               Qty    Rate     Amt" : "Item              Qty    Rate    Amt",
   4,
   y
 );

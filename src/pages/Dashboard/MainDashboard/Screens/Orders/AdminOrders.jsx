@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import "./adminOrders.css";
@@ -14,7 +14,7 @@ const AdminOrders = ({ businessCode }) => {
   const [invoiceConfig, setInvoiceConfig] = useState(null);
 const [selectedUnit, setSelectedUnit] = useState("ALL");
 const [showMoreTabs, setShowMoreTabs] = useState(false);
-
+ const [actionLoading, setActionLoading] = useState(false);
   // 🔐 ROLE
   const role = localStorage.getItem("role"); // admin | staff
   const isAdmin = role === "admin";
@@ -39,6 +39,13 @@ const unitList = [
     new Set(orders.map(o => o.unitName).filter(Boolean))
   ),
 ];
+  const addNewOrder = useCallback((order) => {
+    setOrders(prev => {
+      if (prev.find(o => o._id === order._id)) return prev;
+      return [order, ...prev];
+    });
+  }, []);
+  
 const generateCombinedInvoice = async () => {
   if (filteredOrders.length === 0) {
     alert("No orders to print");
@@ -133,51 +140,32 @@ const consolidatedOrder = {
   };
 
   /* ================= FILTER ORDERS ================= */
-const filteredOrders = orders.filter(order => {
-
-  /* 👨‍🍳 STAFF LOGIC */
-  if (isStaff) {
-    if (order.orderStatus !== "APPROVED") return false;
+const filteredOrders = useMemo(() => {
+  return orders.filter(order => {
+    if (isStaff) {
+      if (order.orderStatus !== "APPROVED") return false;
+      if (selectedUnit !== "ALL" && order.unitName !== selectedUnit)
+        return false;
+      return true;
+    }
 
     if (selectedUnit !== "ALL" && order.unitName !== selectedUnit)
       return false;
 
-    return true;
-  }
+    if (activeTab === "REJECTED")
+      return order.orderStatus === "REJECTED";
 
-  /* 🧑‍💼 ADMIN LOGIC */
+    if (activeTab === "HISTORY")
+      return order.orderStatus === "COMPLETED" &&
+             order.paymentStatus === "PAID";
 
-  // unit filter
-  if (selectedUnit !== "ALL" && order.unitName !== selectedUnit)
-    return false;
+    if (activeTab === "COMPLETED")
+      return order.orderStatus === "COMPLETED" &&
+             order.paymentStatus !== "PAID";
 
-  // 🔥 REJECTED TAB FIX
-  if (activeTab === "REJECTED") {
-    return order.orderStatus === "REJECTED";
-  }
-
-  // 📜 HISTORY
-  if (activeTab === "HISTORY") {
-    return (
-      order.orderStatus === "COMPLETED" &&
-      order.paymentStatus === "PAID"
-    );
-  }
-
-  // 🍽 COMPLETED (unpaid)
-  if (activeTab === "COMPLETED") {
-    return (
-      order.orderStatus === "COMPLETED" &&
-      order.paymentStatus !== "PAID"
-    );
-  }
-
-  // ⏳ PENDING / ✅ APPROVED
-  return order.orderStatus === activeTab;
-});
-
-
-
+    return order.orderStatus === activeTab;
+  });
+}, [orders, activeTab, selectedUnit, isStaff]);
 
   /* ================= ACTIONS ================= */
   const updateStatus = async (orderId, status) => {
@@ -198,15 +186,16 @@ const filteredOrders = orders.filter(order => {
   };
 
 const markAsPaid = async (order) => {
+  if (actionLoading) return;
+  setActionLoading(true);
+
   try {
-    // 1️⃣ API call
     const res = await axios.put(
       `${API_URLS.ORDER}/pay/${order._id}`
     );
 
-    const updatedOrder = res.data.order; // ✅ billNo yahin hai
+    const updatedOrder = res.data.order;
 
-    // 2️⃣ State update (ONLY ONCE)
     setOrders(prev =>
       prev.map(o =>
         o._id === updatedOrder._id
@@ -215,20 +204,20 @@ const markAsPaid = async (order) => {
       )
     );
 
-    // 3️⃣ Invoice UPDATED order se print karo
-generateThermalInvoice(updatedOrder, {
-  ...invoiceConfig,
-  businessName: localStorage.getItem("businessName"),
-  businessPhone: invoiceConfig?.businessPhone || "", // ✅ FIX
-  businessAddress: invoiceConfig?.businessAddress || {},
-});
-
-
+    generateThermalInvoice(updatedOrder, {
+      ...invoiceConfig,
+      businessName: localStorage.getItem("businessName"),
+      businessPhone: invoiceConfig?.businessPhone || "",
+      businessAddress: invoiceConfig?.businessAddress || {},
+    });
   } catch (err) {
     console.error("Mark as paid error:", err);
     alert("Failed to mark payment");
+  } finally {
+    setActionLoading(false);
   }
 };
+
 
 
   /* ================= FETCH ORDERS ================= */
@@ -245,14 +234,13 @@ generateThermalInvoice(updatedOrder, {
 
   /* ================= SOCKET ================= */
   useEffect(() => {
-    fetchOrders();
-    fetchInvoiceConfig();
+  if (!businessCode) return;
 
-    socket.emit("join-business", businessCode);
+  fetchOrders();
+  fetchInvoiceConfig();
 
-    socket.on("new-order", order => {
-      setOrders(prev => [order, ...prev]);
-    });
+  socket.emit("join-business", businessCode);
+  socket.on("new-order", addNewOrder);
 
     socket.on("order-status-update", ({ orderId, status, paymentStatus }) => {
       setOrders(prev =>
@@ -275,11 +263,12 @@ generateThermalInvoice(updatedOrder, {
     });
 
     return () => {
-      socket.off("new-order");
+      socket.off("new-order", addNewOrder);
       socket.off("order-status-update");
       socket.off("payment-updated");
     };
-  }, [businessCode]);
+}, [businessCode, addNewOrder]);
+
 
   if (error) return <p className="error">{error}</p>;
 
@@ -587,12 +576,18 @@ filteredOrders.length > 0 && (
               {isAdmin &&
                 order.orderStatus === "COMPLETED" &&
                 order.paymentStatus !== "PAID" && (
-                  <button
-                  style={{backgroundColor:"#887022"}}
-                    onClick={() => markAsPaid(order)}
-                  >
-                    💰 Mark as Paid
-                  </button>
+             <button
+  disabled={actionLoading}
+  style={{
+    backgroundColor: "#887022",
+    opacity: actionLoading ? 0.6 : 1,
+    cursor: actionLoading ? "not-allowed" : "pointer"
+  }}
+  onClick={() => markAsPaid(order)}
+>
+  💰 Mark as Paid
+</button>
+
                 )}
             </div>
           </div>
