@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import axios from "axios";
+import { SOCKET_URL } from "../../../../../services/api.js";
 import { io } from "socket.io-client";
 import "./adminOrders.css";
-import API_URLS from "../../../../../services/api.js";
+import {API_URLS} from "../../../../../services/api.js";
 import { generateThermalInvoice } from "../utils/generateInvoice.js";
 import ManualOrderForm from "./ManualOrderForm.jsx";
-const socket = io("https://cafe-backend-28q0.onrender.com");
 
 const AdminOrders = ({ businessCode }) => {
+  const socketRef = useRef(null);
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("PENDING");
@@ -19,6 +20,16 @@ const [showMoreTabs, setShowMoreTabs] = useState(false);
   const role = localStorage.getItem("role"); // admin | staff
   const isAdmin = role === "admin";
   const isStaff = role === "staff";
+
+useEffect(() => {
+  socketRef.current = io(SOCKET_URL, {
+    transports: ["websocket"],
+  });
+
+  return () => {
+    socketRef.current.disconnect();
+  };
+}, []);
 
   /* ================= COUNTS ================= */
   const counts = {
@@ -239,10 +250,10 @@ const markAsPaid = async (order) => {
   fetchOrders();
   fetchInvoiceConfig();
 
-  socket.emit("join-business", businessCode);
-  socket.on("new-order", addNewOrder);
+   socketRef.current.emit("join-business", businessCode);
+   socketRef.current.on("new-order", addNewOrder);
 
-    socket.on("order-status-update", ({ orderId, status, paymentStatus }) => {
+     socketRef.current.on("order-status-update", ({ orderId, status, paymentStatus }) => {
       setOrders(prev =>
         prev.map(o =>
           o._id === orderId
@@ -252,7 +263,7 @@ const markAsPaid = async (order) => {
       );
     });
 
-    socket.on("payment-updated", ({ orderId, paymentStatus, billNo }) => {
+     socketRef.current.on("payment-updated", ({ orderId, paymentStatus, billNo }) => {
       setOrders(prev =>
         prev.map(o =>
           o._id === orderId
@@ -263,9 +274,9 @@ const markAsPaid = async (order) => {
     });
 
     return () => {
-      socket.off("new-order", addNewOrder);
-      socket.off("order-status-update");
-      socket.off("payment-updated");
+       socketRef.current.off("new-order", addNewOrder);
+       socketRef.current.off("order-status-update");
+       socketRef.current.off("payment-updated");
     };
 }, [businessCode, addNewOrder]);
 

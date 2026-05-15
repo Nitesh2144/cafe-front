@@ -1,5 +1,5 @@
 const BASE_URL = "https://cafe-backend-28q0.onrender.com";
-// const BASE_URL = "http://10.112.25.238:5000"; 
+// const BASE_URL = "http://10.22.10.238:5000"; 
 
 export const API_URLS = {
   LOGIN: `${BASE_URL}/api/entry`,
@@ -11,6 +11,8 @@ export const API_URLS = {
     DASHBOARD: `${BASE_URL}/api/dashboard`,
  MANUALLYPAY: `${BASE_URL}/api/manpayment`,
   INVOICE_CONFIG: `${BASE_URL}/api/invoice-config`,
+  FEEDBACK: `${BASE_URL}/api/feedback`,
+
 };
 
-export default API_URLS;
+export const SOCKET_URL = BASE_URL;

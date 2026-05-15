@@ -1,12 +1,15 @@
 import { io } from "socket.io-client";
-const socket = io("https://cafe-backend-28q0.onrender.com");
   import { useParams } from "react-router-dom";
   import { useEffect, useState } from "react";
   import axios from "axios";
   import "./qrMenu.css";
-  import { API_URLS } from "../../../services/api.js";
+  import { SOCKET_URL } from "../../../services/api.js";
+  import { API_URLS } from "../../../services/api";
+import { useRef } from "react";
 
-  const QrMenu = () => {
+const QrMenu = () => {
+  const socketRef = useRef(null);
+
     const { businessCode, unitCode } = useParams();
 const [enableItemNote, setEnableItemNote] = useState(false);
     const [menu, setMenu] = useState([]);
@@ -14,70 +17,211 @@ const [enableItemNote, setEnableItemNote] = useState(false);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState("All");
   const [categories, setCategories] = useState([]);
-const [orderStatus, setOrderStatus] = useState(null);
-const [orderId, setOrderId] = useState(null);
-const [paymentStatus, setPaymentStatus] = useState("UNPAID");
-const [showOrderSummary, setShowOrderSummary] = useState(false);
-const [placedOrders, setPlacedOrders] = useState([]);
-useEffect(() => {
-  if (!businessCode) return;
-
-  socket.emit("join-business", businessCode);
-
-  // 🟡 Order status change (PENDING → APPROVED → COMPLETED)
-  socket.on("order-status-update", ({ orderId: id, status }) => {
-    if (id === orderId) {
+  const [orderStatus, setOrderStatus] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState("UNPAID");
+  const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [placedOrders, setPlacedOrders] = useState([]);
+  const [feedbackEnabled, setFeedbackEnabled] = useState(false);
+  const [allowEarlyFeedback, setAllowEarlyFeedback] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+  // 🛒 CART STATE
+  const [cart, setCart] = useState([]);
+  useEffect(() => {
+    socketRef.current = io(SOCKET_URL, {
+      transports: ["websocket"],
+    });
+    
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (!businessCode || !socketRef.current) return;
+    
+    socketRef.current.emit("join-business", businessCode);
+    
+    const orderHandler = ({ orderId: id, status }) => {
       setOrderStatus(status);
-    }
-  });
-
-  // 🟢 Payment update (UNPAID → PAID)
-  socket.on("payment-updated", ({ orderId: id, paymentStatus }) => {
-    if (id === orderId) {
+    };
+    
+    const paymentHandler = ({ orderId: id, paymentStatus }) => {
       setPaymentStatus(paymentStatus);
-    }
-  });
-
-  return () => {
-    socket.off("order-status-update");
-    socket.off("payment-updated");
-  };
-}, [businessCode, orderId]);
-
-
-
-    // 🛒 CART STATE
-    const [cart, setCart] = useState([]);
-console.log(businessCode);
-
-    useEffect(() => {
-      axios
-        .get(`${API_URLS.MENU}/by-business/${businessCode}`)
-        .then((res) => {
-          setMenu(res.data.menu || res.data);
-          setBusinessName(res.data.businessName || "");
-            setEnableItemNote(res.data.enableItemNote || false); 
-          setLoading(false);
-        });
-    }, [businessCode]);
-
-    /* ================= CATEGORY ================= */
+    };
+    
+    socketRef.current.on("order-status-update", orderHandler);
+    socketRef.current.on("payment-updated", paymentHandler);
+    
+    return () => {
+      socketRef.current.off("order-status-update", orderHandler);
+      socketRef.current.off("payment-updated", paymentHandler);
+    };
+  }, [businessCode, orderId]);
+  
+  
   useEffect(() => {
     axios
-      .get(`${API_URLS.MENU}/categories/${businessCode}`)
-      .then((res) => {
-        setCategories(["All", ...res.data.map((c) => c.name)]);
-      })
-      .catch((err) => console.error(err));
+    .get(`${API_URLS.MENU}/by-business/${businessCode}`)
+    .then((res) => {
+      setMenu(res.data.menu || []);
+      setBusinessName(res.data.businessName || "");
+      setEnableItemNote(res.data.enableItemNote || false);
+      
+      setFeedbackEnabled(
+        res.data.enableFeedback || false
+      );
+      setAllowEarlyFeedback(
+        res.data.allowBeforeCompletion || false
+      );
+    })
+    .catch((err) => {
+      console.error("Menu API failed:", err);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   }, [businessCode]);
+  
+useEffect(() => {
+  const uniqueCategories = [
+    { _id: "all", name: "All" },
+  ];
+
+  if (menu.length) {
+    const map = new Map();
+
+    menu.forEach((item) => {
+      if (item.categoryId?._id) {
+        map.set(item.categoryId._id, {
+          _id: item.categoryId._id,
+          name: item.categoryId.name,
+        });
+      }
+    });
+
+    uniqueCategories.push(...map.values());
+  }
+
+  setCategories(uniqueCategories);
+}, [menu]);
 
 
-    const filteredMenu =
-      selectedCategory === "All"
-        ? menu
-        : menu.filter((item) => item.category === selectedCategory);
+
+    /* ================= CATEGORY ================= */
+
+const fetchCategories = async () => {
+  if (!businessCode) return;
+
+  try {
+    const res = await axios.get(
+      `${API_URLS.MENU}/used-categories/${businessCode}`
+    );
+  setCategories([
+  { _id: "all", name: "All" },
+  ...(res.data || []),
+]);
+
+  } catch {
+    Alert.alert("Error", "Failed to load categories");
+  }
+};
+
+
+
+useEffect(() => {
+  if (orderStatus === "COMPLETED" && paymentStatus === "PAID") {
+    setShowOrderSummary(false);
+    setPlacedOrders([]);
+    setCart([]);
+
+    // setTimeout(() => {
+    //   alert("✅ Order Completed. Thank you!");
+    //   window.location.reload(); // ❌ yahin problem
+    // }, 4000);
+  }
+}, [orderStatus, paymentStatus]);
+
+
+useEffect(() => {
+  const handleBeforeUnload = (e) => {
+    // 🔒 Lock only when order is active
+    if (orderId && orderStatus !== "COMPLETED") {
+      e.preventDefault();
+      e.returnValue = ""; // required for browser
+    }
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, [orderId, orderStatus]);
+useEffect(() => {
+  if (
+    feedbackEnabled &&
+    orderId &&
+    ["COMPLETED", "READY"].includes(orderStatus) &&
+    ["PAID", "SUCCESS"].includes(paymentStatus)
+  ) {
+    setShowFeedbackModal(true);
+  }
+}, [orderStatus, paymentStatus, feedbackEnabled, orderId]);
+
+    if (loading) return <div className="loading">🍽 Loading Menu...</div>;
+const grandTotal = placedOrders.reduce(
+  (sum, order) => sum + order.totalAmount,
+  0
+);
+
+const filteredMenu =
+  selectedCategory === "All"
+    ? menu
+    : menu.filter(
+        (item) =>
+          item.categoryId?.name === selectedCategory
+      );
+
+
+useEffect(() => {
+  console.log("UPDATED CATEGORIES:", categories);
+}, [categories]);
+
+
 
     /* ================= CART LOGIC ================= */
+const submitFeedback = async () => {
+  try {
+    await axios.post(`${API_URLS.FEEDBACK}`, {
+      businessCode: businessCode.toUpperCase(),
+      orderId,
+      rating,
+      message: feedbackMsg,
+    });
+
+    alert("🙏 Thanks for your feedback!");
+    setShowFeedbackModal(false);
+    setFeedbackMsg("");
+    setRating(5);
+
+    // 🔥 ONLY refresh after final completion
+    if (
+      orderStatus === "COMPLETED" &&
+      paymentStatus === "PAID"
+    ) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 1200);
+    }
+
+  } catch (err) {
+    alert(err.response?.data?.message || "Feedback failed");
+  }
+};
+
 
 const addToCart = (item) => {
   setCart((prev) => {
@@ -170,40 +314,7 @@ setCart([]); // bottom cart clear
   }
 };
 
-useEffect(() => {
-  if (orderStatus === "COMPLETED" && paymentStatus === "PAID") {
-      setShowOrderSummary(false);
-setPlacedOrders([]);
- setCart([]);
-    setTimeout(() => {
-      alert("✅ Order Completed. Thank you!");
-      window.location.reload(); // OR redirect
-    }, 4000);
-  }
-}, [orderStatus, paymentStatus]);
 
-useEffect(() => {
-  const handleBeforeUnload = (e) => {
-    // 🔒 Lock only when order is active
-    if (orderId && orderStatus !== "COMPLETED") {
-      e.preventDefault();
-      e.returnValue = ""; // required for browser
-    }
-  };
-
-  window.addEventListener("beforeunload", handleBeforeUnload);
-
-  return () => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-  };
-}, [orderId, orderStatus]);
-
-
-    if (loading) return <div className="loading">🍽 Loading Menu...</div>;
-const grandTotal = placedOrders.reduce(
-  (sum, order) => sum + order.totalAmount,
-  0
-);
 const getOrderStatusLabel = (status) => {
   switch (status) {
     case "PENDING":
@@ -234,19 +345,20 @@ const getOrderStatusLabel = (status) => {
 
 
         {/* 🧭 CATEGORY BAR */}
-        <div className="category-bar">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={selectedCategory === cat ? "active" : ""}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat}
-            </button>
-          
-          ))}
+   <div className="category-bar">
+{categories.map((cat) => (
+  <button
+    key={cat._id}
+    className={selectedCategory === cat.name ? "active" : ""}
+    onClick={() => setSelectedCategory(cat.name)}
+  >
+    {cat.name}
+  </button>
+))}
+
             <div style={{width:"30px", height:"10px", marginLeft:"50px"}}></div>
-        </div>
+</div>
+
 
 {orderStatus && (
   <div className={`order-status ${orderStatus.toLowerCase()}`}>
@@ -261,7 +373,11 @@ const getOrderStatusLabel = (status) => {
             return (
               <div key={item._id} className="menu-card">
 
-                <img src={item.image} alt={item.name} />
+             <img
+  src={item.image || "/no-image.png"}
+  alt={item.name}
+/>
+
 
                 <div className="menu-info">
                   <h4>{item.name}</h4>
@@ -295,6 +411,34 @@ const getOrderStatusLabel = (status) => {
               </div>
             );
           })}
+{showFeedbackModal && (
+  <div className="feedback-overlay">
+    <div className="feedback-box">
+      <h3>⭐ Rate Your Experience</h3>
+        <select
+          value={rating}
+          onChange={(e) => setRating(Number(e.target.value))}
+        >
+          <option value={5}>⭐⭐⭐⭐⭐</option>
+          <option value={4}>⭐⭐⭐⭐</option>
+          <option value={3}>⭐⭐⭐</option>
+          <option value={2}>⭐⭐</option>
+          <option value={1}>⭐</option>
+        </select>
+     
+
+      <textarea
+        placeholder="Write your feedback..."
+        value={feedbackMsg}
+        onChange={(e) => setFeedbackMsg(e.target.value)}
+      />
+
+      <button onClick={submitFeedback}>
+        Submit Feedback
+      </button>
+    </div>
+  </div>
+)}
 
           {filteredMenu.length === 0 && (
             <p style={{ textAlign: "center", width: "100%" }}>
@@ -346,6 +490,7 @@ const getOrderStatusLabel = (status) => {
         </div>
       ))}
 
+
       {/* GRAND TOTAL */}
       <div className="grand-total">
         <span>Grand Total</span>
@@ -353,6 +498,16 @@ const getOrderStatusLabel = (status) => {
           ₹{grandTotal}
         </span>
       </div>
+{feedbackEnabled &&
+  allowEarlyFeedback &&
+  orderStatus !== "COMPLETED" && (
+    <div
+      className="early-feedback"
+      onClick={() => setShowFeedbackModal(true)}
+    >
+      💬 Give Feedback
+    </div>
+)}
 
       <button
   className="close-summary-btn"

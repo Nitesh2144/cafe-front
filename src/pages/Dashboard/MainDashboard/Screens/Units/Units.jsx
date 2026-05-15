@@ -83,6 +83,17 @@ const [showForm, setShowForm] = useState(false);
           unitType: form.unitType,
           capacity: Number(form.capacity),
         });
+        // ADD
+const res = await axios.post(`${API_URLS.UNIT}/add`, {
+  businessId,
+  unitName: form.unitName,
+  unitCode: form.unitCode,
+  unitType: form.unitType,
+  capacity: Number(form.capacity),
+});
+
+setUnits(prev => [...prev, res.data.units]);
+
         alert("Unit added");
       }
 

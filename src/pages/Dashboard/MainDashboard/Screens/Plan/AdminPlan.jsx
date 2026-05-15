@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./adminPlan.css";
-import API_URLS from "../../../../../services/api";
+import {API_URLS} from "../../../../../services/api";
 
 const AdminPlan = ({ businessCode }) => {
   const [error, setError] = useState("");

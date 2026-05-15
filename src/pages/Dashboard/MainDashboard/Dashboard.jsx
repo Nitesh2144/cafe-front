@@ -10,6 +10,7 @@ import PayPlanQR from "./Screens/Plan/BusinessPayQR.jsx";
 import InvoiceSettings from "./Screens/Invoice/InvoiceSettings.jsx";
 import "./Dashboard.css";
 import OrderSettings from "./Screens/Settings/OrderSettings.jsx";
+import FeedbackTable from "./Screens/Feedback/FeedbackTable.jsx";
 
 const Dashboard = () => {
   const businessId = localStorage.getItem("businessId");
@@ -45,6 +46,10 @@ const Dashboard = () => {
           <Route
             path="/invoice"
             element={<InvoiceSettings businessCode={businessCode} />}
+          />
+            <Route
+            path="/feedback"
+            element={<FeedbackTable businessCode={businessCode} />}
           />
           <Route
             path="/setting"

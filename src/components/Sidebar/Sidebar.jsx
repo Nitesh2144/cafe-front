@@ -9,6 +9,7 @@ const sidebarMenu = [
   { label: "Menu", path: "/admin/dashboard/menu", icon: "📋" },
   { label: "Orders", path: "/admin/dashboard/order", icon: "🍽️" },
   { label: "Add Staff", path: "/admin/dashboard/staff", icon: "👨‍🍳" },
+     { label: "Feedback", path: "/admin/dashboard/feedback", icon: "⚙️" },
   { label: "Invoice", path: "/admin/dashboard/invoice", icon: "🧾" },
   { label: "Plan", path: "/admin/dashboard/planman", icon: "💳" },
    { label: "Settings", path: "/admin/dashboard/setting", icon: "⚙️" },

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import API_URLS from "../../../../../services/api.js";
+import {API_URLS} from "../../../../../services/api.js";
 import "./invoiceSettings.css"
 const defaultConfig = {
   themeColor: "#6c5ce7",

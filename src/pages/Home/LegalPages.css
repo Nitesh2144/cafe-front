@@ -1,0 +1,67 @@
+/* LegalPages.css */
+
+.legal-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 60px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.legal-card {
+  max-width: 900px;
+  margin: auto;
+  background: #ffffff;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
+}
+
+.legal-title {
+  font-size: 42px;
+  margin-bottom: 25px;
+  color: #111;
+}
+
+.legal-subtitle {
+  font-size: 26px;
+  margin-top: 35px;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.legal-text {
+  font-size: 17px;
+  line-height: 1.9;
+  color: #555;
+}
+
+.legal-contact {
+  margin-top: 35px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.legal-contact-text {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #444;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .legal-card {
+    padding: 30px 20px;
+  }
+
+  .legal-title {
+    font-size: 32px;
+  }
+
+  .legal-subtitle {
+    font-size: 22px;
+  }
+
+  .legal-text {
+    font-size: 15px;
+  }
+}

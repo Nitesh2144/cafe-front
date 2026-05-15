@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import axios from "axios";
-import API_URLS from "../../../../../services/api.js";
+import {API_URLS} from "../../../../../services/api.js";
 import "./PayPlanQR.css";
 
 const BusinessPayQR = ({ businessCode }) => {

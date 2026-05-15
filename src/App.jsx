@@ -5,7 +5,11 @@ import Login from "./pages/Login/Login.jsx";
 import Dashboard from "./pages/Dashboard/MainDashboard/Dashboard.jsx";
 import StaffDashboard from "./pages/Dashboard/Staff/StaffDashboard.jsx";
 import QrMenu from "./pages/Dashboard/Customer/QrMenu.jsx";
-
+import Home from "./pages/Home/Home.jsx";
+import PrivacyPolicy from "./pages/Home/PrivacyPolicy";
+import TermsConditions from "./pages/Home/TermsConditions";
+import RefundPolicy from "./pages/Home/RefundPolicy";
+import Contact from "./pages/Home/Contact";
 function App() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
@@ -33,15 +37,14 @@ const isQrFlow = (() => {
 
   return (
     <Routes>
+      
       {/* ✅ CUSTOMER QR MENU */}
-      <Route
-        path="/b/:businessCode/u/:unitCode"
-        element={<QrMenu />}
-      />
+    
+   <Route path="/" element={<Home />} />
 
       {/* ✅ LOGIN / REDIRECT */}
 <Route
-  path="/"
+  path="/login"
   element={
     isQrFlow ? (
       <div style={{ padding: 20, textAlign: "center" }}>
@@ -58,6 +61,10 @@ const isQrFlow = (() => {
     )
   }
 />
+  <Route
+        path="/b/:businessCode/u/:unitCode"
+        element={<QrMenu />}
+      />
 
 
       {/* ✅ ADMIN */}
@@ -71,6 +78,10 @@ const isQrFlow = (() => {
         path="/staff/dashboard/*"
         element={isStaff ? <StaffDashboard /> : <Navigate to="/" replace />}
       />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+<Route path="/terms-and-conditions" element={<TermsConditions />} />
+<Route path="/refund-policy" element={<RefundPolicy />} />
+<Route path="/contact" element={<Contact />} />
     </Routes>
   );
 }

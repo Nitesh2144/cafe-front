@@ -40,8 +40,8 @@ const pageHeight =
   FOOTER_HEIGHT;
 
   const baseFontSize =
-    paperSize === "58mm" ? 8 :
-    paperSize === "80mm" ? 10 :
+    paperSize === "58mm" ? 12 :
+    paperSize === "80mm" ? 14 :
     12;
   
   const smallFont = baseFontSize - 2;
