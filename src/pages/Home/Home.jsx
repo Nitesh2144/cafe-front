@@ -220,7 +220,7 @@ const Home = () => {
   </div>
 
   <p style={{ marginTop: "20px", color: "#888" }}>
-    © 2026 Order On Table. All rights reserved.
+    © 2026 Order On Table. All rights reserved..
   </p>
 </footer>
     </div>
