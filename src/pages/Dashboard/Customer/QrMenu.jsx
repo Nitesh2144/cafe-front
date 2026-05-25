@@ -27,6 +27,14 @@ const [enableItemNote, setEnableItemNote] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [rating, setRating] = useState(5);
   const [feedbackMsg, setFeedbackMsg] = useState("");
+
+  const params = new URLSearchParams(window.location.search);
+
+const businessCode =
+  useParams().businessCode || params.get("b");
+
+const unitCode =
+  useParams().unitCode || params.get("u");
   // 🛒 CART STATE
   const [cart, setCart] = useState([]);
   useEffect(() => {

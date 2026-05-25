@@ -40,7 +40,16 @@ const isQrFlow = (() => {
       
       {/* ✅ CUSTOMER QR MENU */}
     
-   <Route path="/" element={<Home />} />
+<Route
+  path="/"
+  element={
+    isQrFlow ? (
+      <QrMenu />
+    ) : (
+      <Home />
+    )
+  }
+/>
 
       {/* ✅ LOGIN / REDIRECT */}
 <Route

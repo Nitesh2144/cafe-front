@@ -6,7 +6,6 @@ import MenuAdmin from "./Screens/Menu/MenuAdmin.jsx";
 import AdminOrders from "./Screens/Orders/AdminOrders.jsx";
 import AdminPlan from "./Screens/Plan/AdminPlan.jsx";
 import CreateStaff from "./Screens/StaffCreate/CreateStaff.jsx";
-import PayPlanQR from "./Screens/Plan/BusinessPayQR.jsx";
 import InvoiceSettings from "./Screens/Invoice/InvoiceSettings.jsx";
 import "./Dashboard.css";
 import OrderSettings from "./Screens/Settings/OrderSettings.jsx";
@@ -38,10 +37,6 @@ const Dashboard = () => {
           <Route
             path="/plan"
             element={<AdminPlan businessCode={businessCode} />}
-          />
-          <Route
-            path="/planman"
-            element={<PayPlanQR businessCode={businessCode} />}
           />
           <Route
             path="/invoice"
