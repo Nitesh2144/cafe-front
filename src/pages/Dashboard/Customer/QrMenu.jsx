@@ -10,6 +10,18 @@ import { useRef } from "react";
 const QrMenu = () => {
   const socketRef = useRef(null);
 
+  const params = new URLSearchParams(window.location.search);
+
+  const {
+    businessCode: routeBusinessCode,
+    unitCode: routeUnitCode,
+  } = useParams();
+
+  const businessCode =
+    routeBusinessCode || params.get("b");
+
+  const unitCode =
+    routeUnitCode || params.get("u");
     const { businessCode, unitCode } = useParams();
 const [enableItemNote, setEnableItemNote] = useState(false);
     const [menu, setMenu] = useState([]);
@@ -28,13 +40,6 @@ const [enableItemNote, setEnableItemNote] = useState(false);
   const [rating, setRating] = useState(5);
   const [feedbackMsg, setFeedbackMsg] = useState("");
 
-  const params = new URLSearchParams(window.location.search);
-
-const businessCode =
-  useParams().businessCode || params.get("b");
-
-const unitCode =
-  useParams().unitCode || params.get("u");
   // 🛒 CART STATE
   const [cart, setCart] = useState([]);
   useEffect(() => {
