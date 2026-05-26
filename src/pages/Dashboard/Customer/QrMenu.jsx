@@ -22,7 +22,7 @@ const QrMenu = () => {
 
   const unitCode =
     routeUnitCode || params.get("u");
-    const { businessCode, unitCode } = useParams();
+    
 const [enableItemNote, setEnableItemNote] = useState(false);
     const [menu, setMenu] = useState([]);
     const [businessName, setBusinessName] = useState("");
