@@ -22,7 +22,8 @@ const QrMenu = () => {
 
   const unitCode =
     routeUnitCode || params.get("u");
-    
+    console.log("BUSINESS CODE:", businessCode);
+console.log("UNIT CODE:", unitCode);
 const [enableItemNote, setEnableItemNote] = useState(false);
     const [menu, setMenu] = useState([]);
     const [businessName, setBusinessName] = useState("");
@@ -183,7 +184,9 @@ useEffect(() => {
     setShowFeedbackModal(true);
   }
 }, [orderStatus, paymentStatus, feedbackEnabled, orderId]);
-
+useEffect(() => {
+  console.log("UPDATED CATEGORIES:", categories);
+}, [categories]);
     if (loading) return <div className="loading">🍽 Loading Menu...</div>;
 const grandTotal = placedOrders.reduce(
   (sum, order) => sum + order.totalAmount,
@@ -199,9 +202,7 @@ const filteredMenu =
       );
 
 
-useEffect(() => {
-  console.log("UPDATED CATEGORIES:", categories);
-}, [categories]);
+
 
 
 
