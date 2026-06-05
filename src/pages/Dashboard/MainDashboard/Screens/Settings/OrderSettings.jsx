@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URLS } from "../../../../../services/api.js";
 import "./settings.css";
-
+import LocationSettings from "./LocationSettings";
 const OrderSettings = ({ businessCode }) => {
   const [enableItemNote, setEnableItemNote] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -178,7 +178,7 @@ const toggleEarlyFeedback = async () => {
 </div>
 
 )}
-
+<LocationSettings businessCode={businessCode} />
       <div className="coming-soon">
         More settings coming soon...
       </div>                  

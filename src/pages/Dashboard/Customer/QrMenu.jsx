@@ -42,6 +42,46 @@ const [enableItemNote, setEnableItemNote] = useState(false);
 
   // 🛒 CART STATE
   const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+  if (!businessCode) return;
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      try {
+        const res = await axios.post(
+          `${API_URLS.LOCATION}/verify`,
+          {
+            businessCode,
+            customerLatitude:
+              position.coords.latitude,
+            customerLongitude:
+              position.coords.longitude,
+          }
+        );
+
+        if (!res.data.allowed) {
+          alert(
+            "You are outside the allowed restaurant area."
+          );
+
+          document.body.innerHTML =
+            "<h2 style='text-align:center;margin-top:50px'>❌ Ordering is only available inside the restaurant</h2>";
+
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    () => {
+      alert(
+        "Location access is required to place orders."
+      );
+    }
+  );
+}, [businessCode]);
+
   useEffect(() => {
     socketRef.current = io(SOCKET_URL, {
       transports: ["websocket"],

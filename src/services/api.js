@@ -11,7 +11,7 @@ export const API_URLS = {
     DASHBOARD: `${BASE_URL}/api/dashboard`,
   INVOICE_CONFIG: `${BASE_URL}/api/invoice-config`,
   FEEDBACK: `${BASE_URL}/api/feedback`,
-
+LOCATION: `${BASE_URL}/api/location`,
 };
 
 export const SOCKET_URL = BASE_URL;
