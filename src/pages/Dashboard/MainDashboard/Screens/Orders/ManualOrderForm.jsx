@@ -116,16 +116,9 @@ const LazyImage = ({ src, alt, size = 130 }) => {
       return matchCategory && matchSearch;
     });
   }, [menu, selectedCategory, search]);
-// 🔴 Occupied tables ka set
-const occupiedUnitCodes = useMemo(() => {
-  return new Set(
-    orders
-      .filter(o => o.isOccupied === true)
-      .map(o => o.unitCode)
-  );
-}, [orders]);
 
-  /* ================= CART ================= */
+
+ /* ================= CART ================= */
 const addItem = (item) => {
   setCart(prev => {
     const exist = prev.find(i => i.itemId === item._id);
@@ -195,6 +188,11 @@ const decreaseQty = (itemId) => {
     setUnitCode("");
     onSuccess();
     setLoading(false);
+    const unitRes = await axios.get(
+  `${API_URLS.UNIT}?businessCode=${businessCode}`
+);
+
+setUnits(unitRes.data || []);
   };
 
   return (
@@ -226,14 +224,24 @@ const decreaseQty = (itemId) => {
 <div className="menu-conatiner">
         {/* ITEMS */}
         {filteredMenu.map(item => (
-          <div key={item._id} className="fk-menu-item">
+       <div
+  key={item._id}
+  className={`fk-menu-item ${
+    getItemQty(item._id) > 0 ? "active-card" : ""
+  }`}
+  onClick={() => {
+    if (getItemQty(item._id) === 0) {
+      addItem(item);
+    }
+  }}
+>
            <LazyImage size={130} src={item.image || "/no-img.png"} alt={item.name} />
             <div className="fk-info">
               <p className="name">{item.name}</p>
               <p className="price">₹{item.price}</p>
             </div>
         {getItemQty(item._id) === 0 ? (
-  <button onClick={() => addItem(item)}>ADD</button>
+<></>
 ) : (
 <div className="menu-qty">
   <button
@@ -270,17 +278,15 @@ const decreaseQty = (itemId) => {
 >
   <option value="">Select Table</option>
 
-  {units.map(u => {
-    const isOccupied = occupiedUnitCodes.has(u.unitCode);
-
-    return (
-      <option key={u._id} value={u.unitCode}>
-        {u.unitName} {isOccupied ? "🔴 Occupied" : "🟢 Free"}
-      </option>
-    );
-  })}
+  {units.map(u => (
+    <option
+      key={u._id}
+      value={u.unitCode}
+    >
+      {u.unitName} {u.isOccupied ? "🔴 Occupied" : "🟢 Free"}
+    </option>
+  ))}
 </select>
-
 
   {/* 📦 ORDER TYPE SELECT */}
   <select

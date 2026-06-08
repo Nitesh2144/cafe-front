@@ -9,7 +9,7 @@ const FeedbackTable = ({ businessCode }) => {
 
   useEffect(() => {
     axios
-      .get(`${API_URLS.FEEDBACK}/business/${businessCode}`)
+      .get(`${API_URLS.FEEDBACK}/feedback/${businessCode}`)
       .then((res) => setFeedbacks(res.data))
       .finally(() => setLoading(false));
   }, [businessCode]);

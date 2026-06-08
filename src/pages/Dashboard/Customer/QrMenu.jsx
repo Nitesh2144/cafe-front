@@ -22,7 +22,7 @@ const QrMenu = () => {
 
   const unitCode =
     routeUnitCode || params.get("u");
-
+const [searchText, setSearchText] = useState("");
 const [enableItemNote, setEnableItemNote] = useState(false);
     const [menu, setMenu] = useState([]);
     const [businessName, setBusinessName] = useState("");
@@ -39,7 +39,8 @@ const [enableItemNote, setEnableItemNote] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [rating, setRating] = useState(5);
   const [feedbackMsg, setFeedbackMsg] = useState("");
-
+const [showConfirmOrder, setShowConfirmOrder] =
+  useState(false);
   // 🛒 CART STATE
   const [cart, setCart] = useState([]);
 
@@ -232,18 +233,18 @@ const grandTotal = placedOrders.reduce(
   0
 );
 
-const filteredMenu =
-  selectedCategory === "All"
-    ? menu
-    : menu.filter(
-        (item) =>
-          item.categoryId?.name === selectedCategory
-      );
+const filteredMenu = menu.filter((item) => {
+  const categoryMatch =
+    selectedCategory === "All" ||
+    item.categoryId?.name === selectedCategory;
 
+  const searchMatch =
+    item.name
+      ?.toLowerCase()
+      .includes(searchText.toLowerCase());
 
-
-
-
+  return categoryMatch && searchMatch;
+});
 
     /* ================= CART LOGIC ================= */
 const submitFeedback = async () => {
@@ -326,7 +327,7 @@ const updateItemNote = (id, value) => {
     );
 
     /* ================= PLACE ORDER ================= */
-const placeOrder = async () => {
+const confirmOrder = async () => {
   if (cart.length === 0) return alert("Cart is empty");
 
   try {
@@ -354,7 +355,8 @@ setPlacedOrders((prev) => [
   },
 ]);
 
-    setShowOrderSummary(true);
+setShowOrderSummary(false);
+setShowConfirmOrder(false);
 setCart([]); // bottom cart clear
     setOrderId(res.data.order._id);
     setOrderStatus(res.data.order.orderStatus || "PENDING");
@@ -383,6 +385,15 @@ const getOrderStatusLabel = (status) => {
 
     return (
       <div className="qr-container">
+        <div className="search-container">
+  <input
+    type="text"
+    placeholder="🔍 Search food, drinks..."
+    value={searchText}
+    onChange={(e) => setSearchText(e.target.value)}
+    className="search-input"
+  />
+</div>
 {placedOrders.length > 0 &&
   orderStatus !== "COMPLETED" &&
   paymentStatus !== "PAID" && (
@@ -506,11 +517,85 @@ const getOrderStatusLabel = (status) => {
             <div>
               <strong>Total:</strong> ₹{totalAmount}
             </div>
-            <button className="place-order-btn" onClick={placeOrder}>
-              Place Order
-            </button>
+            <button
+  className="place-order-btn"
+  onClick={() => setShowConfirmOrder(true)}
+>
+  Review Order
+</button>
+        
           </div>
         )}
+        {showConfirmOrder && (
+  <div
+    className="order-overlay"
+    onClick={() => setShowConfirmOrder(false)}
+  >
+    <div
+      className="order-summary"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h3>🛒 Review Order</h3>
+
+      {cart.map((item) => (
+        <div
+          key={item._id}
+          className="summary-item"
+        >
+          <div>
+            <strong>{item.name}</strong>
+            <br />
+            ₹{item.price}
+          </div>
+
+          <div className="qty-box-review">
+            <button
+              onClick={() =>
+                decreaseQty(item._id)
+              }
+            >
+              ➖
+            </button>
+
+            <span>{item.qty}</span>
+
+            <button
+              onClick={() =>
+                increaseQty(item._id)
+              }
+            >
+              ➕
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <div className="grand-total">
+        <span>Total</span>
+        <span>₹{totalAmount}</span>
+      </div>
+      
+      <div className="parent-place">
+   <button
+        className="close-summary-btn-confirm"
+        onClick={() =>
+          setShowConfirmOrder(false)
+        }
+      >
+        Cancel
+      </button>
+      <button
+        className="place-order-btn-confirm"
+        onClick={confirmOrder}
+      >
+        ✅ Confirm Order
+      </button>
+      </div>
+
+   
+    </div>
+  </div>
+)}
 {showOrderSummary &&
   orderStatus !== "COMPLETED" &&
   paymentStatus !== "PAID" && (

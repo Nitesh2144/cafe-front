@@ -16,6 +16,13 @@ const AdminOrders = ({ businessCode }) => {
 const [selectedUnit, setSelectedUnit] = useState("ALL");
 const [showMoreTabs, setShowMoreTabs] = useState(false);
  const [actionLoading, setActionLoading] = useState(false);
+ const [showDiscountPopup, setShowDiscountPopup] = useState(false);
+const [showBulkDiscountPopup, setShowBulkDiscountPopup] = useState(false);
+
+const [selectedOrder, setSelectedOrder] = useState(null);
+
+const [discountValue, setDiscountValue] = useState("");
+const [bulkDiscountValue, setBulkDiscountValue] = useState("");
   // 🔐 ROLE
   const role = localStorage.getItem("role"); // admin | staff
   const isAdmin = role === "admin";
@@ -57,7 +64,7 @@ const unitList = [
     });
   }, []);
   
-const generateCombinedInvoice = async () => {
+const generateCombinedInvoice = async (bulkDiscount = 0) => {
   if (filteredOrders.length === 0) {
     alert("No orders to print");
     return;
@@ -86,17 +93,24 @@ const generateCombinedInvoice = async () => {
   const mergedItems = Object.values(itemMap);
 
   // 💰 Total
-  const totalAmount = mergedItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+const totalAmount = mergedItems.reduce(
+  (sum, item) =>
+    sum + item.price * item.quantity,
+  0
+);
+
+const finalAmount =
+  totalAmount -
+  Number(bulkDiscount || 0);
 
   // 🧾 Combined order object
 const consolidatedOrder = {
   billNo: Date.now().toString().slice(-4), // TEMP
   unitName,
   items: mergedItems,
-  totalAmount,
+ totalAmount,
+discount: Number(bulkDiscount || 0),
+finalAmount,
   paymentStatus: "PAID",
   createdAt: new Date(),
 };
@@ -196,7 +210,13 @@ const filteredOrders = useMemo(() => {
     }
   };
 
-const markAsPaid = async (order) => {
+const markAsPaid = async (order, discount = 0) => {
+  await axios.put(
+  `${API_URLS.ORDER}/discount/${order._id}`,
+  {
+    discount,
+  }
+);
   if (actionLoading) return;
   setActionLoading(true);
 
@@ -206,7 +226,9 @@ const markAsPaid = async (order) => {
     );
 
     const updatedOrder = res.data.order;
-
+updatedOrder.discount = discount;
+updatedOrder.finalAmount =
+  updatedOrder.totalAmount - discount;
     setOrders(prev =>
       prev.map(o =>
         o._id === updatedOrder._id
@@ -292,7 +314,10 @@ const markAsPaid = async (order) => {
 filteredOrders.length > 0 && (
   <div style={{ marginTop: "1px", marginBottom:"10px",display:"flex", justifyContent:"center" }}>
   <button
-    onClick={generateCombinedInvoice}
+   onClick={() => {
+  setBulkDiscountValue("");
+  setShowBulkDiscountPopup(true);
+}}
     style={{
       height:"35px",
       marginBottom:"20px",
@@ -525,7 +550,7 @@ filteredOrders.length > 0 && (
             style={{
               fontSize: "14px",
               fontWeight:600,
-              color: "#1e200c",
+              color: "#ff5b0e",
               marginTop: "2px",
               marginLeft:"10px",
               fontStyle: "italic",
@@ -594,7 +619,11 @@ filteredOrders.length > 0 && (
     opacity: actionLoading ? 0.6 : 1,
     cursor: actionLoading ? "not-allowed" : "pointer"
   }}
-  onClick={() => markAsPaid(order)}
+ onClick={() => {
+  setSelectedOrder(order);
+  setDiscountValue("");
+  setShowDiscountPopup(true);
+}}
 >
   💰 Mark as Paid
 </button>
@@ -607,7 +636,92 @@ filteredOrders.length > 0 && (
     ))
   )
 )}
+{showDiscountPopup && (
+  <div className="discount-popup">
+    <div className="discount-box">
+      <h3>Apply Discount</h3>
 
+      <input
+        type="number"
+        placeholder="Enter Discount"
+        value={discountValue}
+        onChange={(e) =>
+          setDiscountValue(e.target.value)
+        }
+      />
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <button
+          onClick={() => {
+            setShowDiscountPopup(false);
+
+            markAsPaid(
+              selectedOrder,
+              Number(discountValue || 0)
+            );
+          }}
+        >
+          OK
+        </button>
+
+        <button
+          onClick={() => {
+            setShowDiscountPopup(false);
+
+            markAsPaid(
+              selectedOrder,
+              0
+            );
+          }}
+        >
+          NO
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+{showBulkDiscountPopup && (
+  <div className="discount-popup">
+    <div className="discount-box">
+      <h3>Combined Bill Discount</h3>
+
+      <input
+        type="number"
+        placeholder="Enter Discount"
+        value={bulkDiscountValue}
+        onChange={(e) =>
+          setBulkDiscountValue(e.target.value)
+        }
+      />
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <button
+          onClick={() => {
+            setShowBulkDiscountPopup(false);
+
+            generateCombinedInvoice(
+              Number(
+                bulkDiscountValue || 0
+              )
+            );
+          }}
+        >
+          OK
+        </button>
+
+        <button
+          onClick={() => {
+            setShowBulkDiscountPopup(false);
+
+            generateCombinedInvoice(0);
+          }}
+        >
+          NO
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

@@ -149,12 +149,44 @@ doc.text(line, centerX, y, { align: "center" });
   y += 4;
 doc.text(line, centerX, y, { align: "center" });
 
+y += 6;
 
-  y += 6;
 doc.setFont("courier", "bold");
 doc.setFontSize(bigFont);
-doc.text(`TOTAL ${order.totalAmount}`, centerX, y, { align: "center" });
 
+if ((order.discount || 0) > 0) {
+  doc.text(
+    `Subtotal : ${order.totalAmount}`,
+    centerX,
+    y,
+    { align: "center" }
+  );
+
+  y += 5;
+
+  doc.text(
+    `Discount : ${order.discount}`,
+    centerX,
+    y,
+    { align: "center" }
+  );
+
+  y += 5;
+
+  doc.text(
+    `Payable : ${order.finalAmount}`,
+    centerX,
+    y,
+    { align: "center" }
+  );
+} else {
+  doc.text(
+    `TOTAL ${order.totalAmount}`,
+    centerX,
+    y,
+    { align: "center" }
+  );
+}
   /* ===== FOOTER ===== */
   y += 6;
   doc.setFont("courier", "normal");
